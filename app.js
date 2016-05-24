@@ -1,7 +1,6 @@
+var game;
 window.onload = function () {
-
-    var game = new Phaser.Game(800, 600, Phaser.AUTO, '');
-
+    game = new Phaser.Game(800, 600, Phaser.AUTO, '')
     //  Add the States your game has.
     game.state.add('Boot', GameStates.Boot);
     game.state.add('Preloader', GameStates.Preloader);
