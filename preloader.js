@@ -10,6 +10,7 @@ GameStates.Preloader.prototype = {
         this.load.setPreloadSprite(this.preloadBar);
         // load all game assets
         // images, spritesheets, atlases, audio etc..
+        this.load.image('container', 'assets/container.png');
         this.load.image('logo', 'assets/phaser2.png');
     },
 
