@@ -9,11 +9,17 @@
     this.attachedContainerIndex = attachedContainerIndex
     this.cabinX = cabinX
     this.cabinY = cabinY
-    this.containers = containers
 }
 
-var getData = function() {
-    var ret = new DataForVisualization(Math.random(), Math.random(), Math.random())
+function Container(x, y) {
+    this.x = x
+    this.y = y
+}
+
+var getData = function () {
+    var xy = [];
+    xy.push(new Container(1, 2))
+    var ret = new DataForVisualization(1, xy, Math.random(), Math.random(), Math.random())
 
     return ret
 }
