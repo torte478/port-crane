@@ -18,7 +18,6 @@ FuzzySet.prototype.getFuzzySetFromGrade = function(y){
     return 0;
 }
 
-
 /*
 ===================================
 FUZZY NUMBER
@@ -124,6 +123,37 @@ FuzzyInterval.prototype.getFuzzySetFromGrade = function(y)
     );
 }
 
-var interval = new FuzzyInterval(0, 4, 8, 10);
-var fuzzySet = interval.getFuzzySetFromGrade(0.6);
-console.log(fuzzySet);
+/*
+ ===================================
+ FUZZY LOGIC SYSTEM
+ ===================================
+ */
+
+function FuzzyLogicSystem(){
+    this.inputSystem = {};
+    this.outputSystem = {};
+    this.ruleMapping = {};
+}
+
+FuzzyLogicSystem.prototype.setRule = function(from, to){
+    if (!(from in this.inputSystem))
+        throw new Error("Input system not contains current key");
+    if (!(to in this.outputSystem))
+        throw new Error("Output system not contains current key");
+
+    this.ruleMapping[from] = to;
+}
+
+FuzzyLogicSystem.prototype.calc = function(inputValue)
+{
+    //var resultShape = new Shape();
+    for(var key in this.inputSystem){
+        if (!(key in this.ruleMapping))
+            throw new Error("There is not that rule");
+        var grade = this.inputSystem[key].getMembershipGrade(inputValue);
+        var outputSet = this.outputSystem[this.ruleMapping[key]];
+        //resultShape.add(outputSet.getFuzzySetFromGrade(grade), grade);
+    }
+    //return resultShape.evaluate();
+    return 0;
+}
