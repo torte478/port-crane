@@ -11,6 +11,9 @@ GameStates.Preloader.prototype = {
         // load all game assets
         // images, spritesheets, atlases, audio etc..
         this.load.image('container', 'assets/container.png');
+        this.load.image('cabin', 'assets/container.png');
+        this.load.image('deck', 'assets/deck.png');
+        this.load.image('bg', 'assets/sky.png');
         this.load.image('logo', 'assets/phaser2.png');
     },
 
