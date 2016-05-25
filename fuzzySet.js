@@ -57,7 +57,7 @@ FuzzyNumber.prototype.getFuzzySetFromGrade = function(y)
         throw new Error("Membership grade should be between 0 and 1");
 
     if (y == 1)
-        return new FuzzyNumber(this.xLeft, this.xTop, this.xRight);
+        return new FuzzyInterval(this.xLeft, this.xTop, this.xTop, this.xRight);
     if (y == 0)
         return 0;
 
@@ -121,6 +121,73 @@ FuzzyInterval.prototype.getFuzzySetFromGrade = function(y)
         this.xTopRight + (this.xRight - this.xTopRight) * (1 - y),
         this.xRight
     );
+}
+
+/*
+ ===================================
+ GEOMETRY SYSTEM
+ ===================================
+ */
+
+function GeometrySystem(leftBorder, rightBorder, stepCount)
+{
+    if (leftBorder >= rightBorder)
+        throw new Error("leftBorder should be smaller than rightBorder");
+    if (stepCount <= 0)
+        throw new Error("stepCount should be greater than 0");
+
+    this.leftBorder = leftBorder;
+    this.rightBorder = rightBorder;
+    this.stepCount = stepCount;
+
+    this.shape = new Array();
+    this.step = (rightBorder - leftBorder) / stepCount;
+    for (var i = 0; i < stepCount; ++i)
+        this.shape[i] = 0;
+}
+
+GeometrySystem.prototype.evaluate = function(){
+    return 0;
+}
+
+GeometrySystem.prototype.add = function(fuzzyInterval, grade){
+    if (fuzzyInterval.xLeft < this.leftBorder || fuzzyInterval.xRight > this.rightBorder)
+        throw new Error("New shape should be bertween leftBorder and rightBorder");
+    if (grade < 0 || grade > 1)
+        throw new Error("Grade should be between 0 and 1");
+
+    for (var i = 0; i < this.stepCount; ++i) {
+        var pos = this.leftBorder + i * this.step;
+        if (pos >= fuzzyInterval.xLeft && pos <= fuzzyInterval.xRight) {
+            var currentValue = 0;
+            if (pos >= fuzzyInterval.xTopLeft && pos <= fuzzyInterval.xTopRight)
+                currentValue = grade;
+            else if (pos <= fuzzyInterval.xTopLeft)
+                currentValue = grade * (pos - fuzzyInterval.xLeft) / (fuzzyInterval.xTopLeft - fuzzyInterval.xLeft);
+            else
+                currentValue = grade * (fuzzyInterval.xRight - pos) / (fuzzyInterval.xRight - fuzzyInterval.xTopRight);
+
+            this.shape[i] = Math.max(this.shape[i], currentValue);
+        }
+    }
+}
+
+GeometrySystem.prototype.print = function(){
+    console.log("shape:");
+    for (var height = 1; height >= 0; height -= 0.1)
+    {
+        var s = "";
+        for (var i = 0; i < this.stepCount; ++i)
+            if (this.shape[i] >= height)
+                s += ":";
+            else
+                s += " ";
+        console.log(s);
+    }
+    var s = ""
+    for (var i = 0; i < this.stepCount; ++i)
+        s += "-";
+    console.log(s);
 }
 
 /*
