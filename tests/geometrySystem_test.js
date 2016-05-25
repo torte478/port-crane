@@ -66,3 +66,9 @@ QUnit.test( "add2", function(assert){
     assert.equal(geomSys.shape[16], 0.6, "Correctly add one shape (part of value)")
 });
 
+QUnit.test ("evaluate", function(assert){
+   var geomSys = initializeGeometrySystem();
+    geomSys.add(new FuzzyInterval(0, 0, 10, 10), 1);
+    assert.equal(geomSys.evaluate(), 5, "Return center when shape is symmetric");
+});
+

@@ -147,7 +147,17 @@ function GeometrySystem(leftBorder, rightBorder, stepCount)
 }
 
 GeometrySystem.prototype.evaluate = function(){
-    return 0;
+    var xm = 0;
+    var M = 0;
+    for (var i = 0; i < this.stepCount; ++i)
+    {
+        xm += (this.leftBorder + i * this.step) * this.shape[i];
+        M += this.shape[i];
+    }
+    if (M == 0)
+        return 0;
+
+    return xm / M;
 }
 
 GeometrySystem.prototype.add = function(fuzzyInterval, grade){
