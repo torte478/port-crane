@@ -133,7 +133,8 @@ QUnit.test( "fuzzyNumber getFuzzySetFromGrade", function (assert){
     var fuzzySet = number.getFuzzySetFromGrade(1);
     assert.ok(
         fuzzySet.xLeft == 0 &&
-            fuzzySet.xTop == 5 &&
+            fuzzySet.xTopLeft == 5 &&
+            fuzzySet.xTopRight == 5 &&
             fuzzySet.xRight == 10,
         "Return equal fuzzy set when grade is 1)");
 });
