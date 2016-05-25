@@ -11,10 +11,20 @@
     <script src="preloader.js"></script>
     <script src="mainmenu.js"></script>
     <script src="game.js"></script>
+    <style>
+    .windspeed {
+        display: block;
+        padding: 24px;
+    }
+    </style>
 </head>
 <body>
-    <h1>Javascript Phaser App</h1>
+    <h1>Портовый кран</h1>
 
     <div id="content"></div>
+    <div class="windspeed">
+        Скорость ветра:
+        <input type="range" name="windspeed" min="-10" max="10">
+    </div>
 </body>
 </html>
