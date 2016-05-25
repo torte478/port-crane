@@ -14,11 +14,10 @@ function Container(x, y) {
 
 var getData = function () {
     var xs = [];
-    xs.push(new Container(64 * Math.random(), 64))
+    xs.push(new Container(800 * Math.random(), 100 + 400 * Math.random()))
     var ret = new DataForVisualization(
         Math.random() * 64 + 500, 
         xs, 
-        0, 
         Math.random() * 800)
 
     return ret
@@ -32,7 +31,7 @@ GameStates.Game.prototype = {
     create: function () {
         var hoistHeight = 100
         this.hoist = this.add.sprite(0, 0, 'hoist')
-        this.rails = this.add.sprite(this.world.centerX, this.world.centerY, 'rails')
+        this.rails = this.add.sprite(0, 0, 'rails')
         this.bg = this.add.sprite(0, 0, 'bg')
         this.deck  = this.add.sprite(this.world.centerX, 0, 'deck')
         this.deck.anchor.x = 0.5
