@@ -210,6 +210,10 @@ function FuzzyLogicSystem(){
     this.inputSystem = {};
     this.outputSystem = {};
     this.ruleMapping = {};
+
+    this.leftBorder = "NULL";
+    this.rightBorder = "NULL";
+    this.accuracy = 100;
 }
 
 FuzzyLogicSystem.prototype.setRule = function(from, to){
@@ -221,16 +225,44 @@ FuzzyLogicSystem.prototype.setRule = function(from, to){
     this.ruleMapping[from] = to;
 }
 
+FuzzyLogicSystem.prototype.addInputSet = function(name, fuzzySet){
+    this.inputSystem[name] = fuzzySet;
+}
+
+FuzzyLogicSystem.prototype.addOutputSet = function(name, fuzzySet){
+    this.outputSystem[name] = fuzzySet;
+
+    if (this.leftBorder == "NULL")
+    {
+        this.leftBorder = fuzzySet.xLeft;
+        this.rightBorder = fuzzySet.xRight;
+    }
+    else
+    {
+        this.leftBorder = Math.min(this.leftBorder, fuzzySet.xLeft);
+        this.rightBorder = Math.max(this.rightBorder, fuzzySet.xRight);
+    }
+}
+
+FuzzyLogicSystem.prototype.setAccuracy = function(accuracy){
+    if (accuracy <= 0)
+        throw new Error("Accuracy should be positive");
+    this.accuracy = accuracy;
+}
+
 FuzzyLogicSystem.prototype.calc = function(inputValue)
 {
-    //var resultShape = new Shape();
+    if (this.leftBorder == "NULL")
+        return 0;
+
+    var resultShape = new GeometrySystem(this.leftBorder, this.rightBorder, this.accuracy);
     for(var key in this.inputSystem){
         if (!(key in this.ruleMapping))
             throw new Error("There is not that rule");
+
         var grade = this.inputSystem[key].getMembershipGrade(inputValue);
         var outputSet = this.outputSystem[this.ruleMapping[key]];
-        //resultShape.add(outputSet.getFuzzySetFromGrade(grade), grade);
+        resultShape.add(outputSet.getFuzzySetFromGrade(grade), grade);
     }
-    //return resultShape.evaluate();
-    return 0;
+    return resultShape.evaluate();
 }

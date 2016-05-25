@@ -4,12 +4,12 @@
 
 function initialize(){
     var res = new FuzzyLogicSystem();
-    res.inputSystem["Less"] = new FuzzyInterval(0, 0, 5, 10);
-    res.inputSystem["Normal"] = new FuzzyNumber(5, 15);
-    res.inputSystem["More"] = new FuzzyInterval(10, 15, 20, 20);
+    res.addInputSet("Less", new FuzzyInterval(0, 0, 5, 10));
+    res.addInputSet("Normal", new FuzzyNumber(5, 10, 15))
+    res.addInputSet("More", new FuzzyInterval(10, 15, 20, 20))
 
-    res.outputSystem["Left"] = new FuzzyInterval(0, 0, 5, 10);
-    res.outputSystem["Right"] = new FuzzyInterval(5, 10, 15, 15);
+    res.addOutputSet("Left", new FuzzyInterval(0, 0, 5, 10));
+    res.addOutputSet("Right", new FuzzyInterval(5, 10, 15, 15));
 
     res.setRule("Less", "Left");
     res.setRule("Normal", "Left");
@@ -19,7 +19,7 @@ function initialize(){
 
 QUnit.test ("constructor", function (assert){
     var flSystem = initialize();
-    assert.ok(true);
+    assert.ok(true)
 });
 
 QUnit.test ("setRule", function (assert){
@@ -44,4 +44,19 @@ QUnit.test ("setRule exception1", function (assert){
         Error,
         "Throws exception when output system not contains current key"
     )
+});
+
+QUnit.test ("calc borders", function (assert){
+    var flSystem = initialize();
+    assert.ok(
+        flSystem.leftBorder == 0 &&
+        flSystem.rightBorder == 15,
+        "Constructor is correct"
+    );
+})
+
+QUnit.test ("setAccuracy", function (assert){
+   var flSystem = initialize();
+    flSystem.setAccuracy(256);
+    assert.equal(flSystem.accuracy, 256, "Correctly changes accuracy");
 });
