@@ -2,13 +2,11 @@
     deckHeight, 
     containers, 
     attachedContainerIndex, 
-    cabinX, 
-    cabinY) {
+    cabinX) {
     this.deckHeight = deckHeight
     this.containers = containers
     this.attachedContainerIndex = attachedContainerIndex
     this.cabinX = cabinX
-    this.cabinY = cabinY
 }
 
 function Container(x, y) {
@@ -17,9 +15,13 @@ function Container(x, y) {
 }
 
 var getData = function () {
-    var xy = [];
-    xy.push(new Container(1, 2))
-    var ret = new DataForVisualization(1, xy, Math.random(), Math.random(), Math.random())
+    var xs = [];
+    xs.push(new Container(64, 64))
+    var ret = new DataForVisualization(
+        Math.random() * 64 + 500, 
+        xs, 
+        0, 
+        Math.random() * 800)
 
     return ret
 }
@@ -30,17 +32,42 @@ GameStates.Game = function (game) {
 
 GameStates.Game.prototype = {
     create: function () {
-        this.cabin = this.add.sprite(this.world.centerX, 100, 'container');
-        this.deck  = this.add.sprite(this.world.centerX, this.world.centerY, 'container');
+    
+        var cabinHeight = 100
+        this.cabin = this.add.sprite(0, 0, 'container')
+        this.craneTop = this.add.sprite(this.world.centerX, this.world.centerY, 'crane-top')
+        this.bg = this.add.sprite(0, 0, 'bg')
+        this.deck  = this.add.sprite(this.world.centerX, 0, 'deck')
+        this.deck.anchor.x = 0.5
+        this.deck.anchor.y = 0
+
+        var maxContainers = 16
+        this.containers = []
+        for (i = 0; i < maxContainers; ++i) {
+            var newSprite = this.add.sprite(-1000, -1000, 'container')
+            newSprite.visible = false
+            this.containers.push(newSprite)
+        }
     },
 
     update: function () { 
         var data = getData()
-        var s = "Deck Height: " + data.deckHeight +
-                " cabinX: " + data.cabinX +
-                " cabinY: " + data.cabinY
-        this.cabin.x = data.cabinX * game.width
-        this.deck.y  = this.world.centerY + data.deckHeight
+
+        var trunc = function(s) {
+            return String(s).substring(0, 6)
+        }
+
+        var s = "deckHeight: " + trunc(data.deckHeight) +
+                " cabinX: " + trunc(data.cabinX)
+
+        this.cabin.x = data.cabinX
+        this.deck.y  = data.deckHeight
+
+        for (i = 0; i < data.containers.length; ++i) {
+            this.containers[i].x = data.containers[i].x
+            this.containers[i].y = data.containers[i].y
+            this.containers[i].visible = true
+        }
 
         game.debug.text(s, 11, 11)
     },

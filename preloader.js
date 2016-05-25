@@ -9,9 +9,11 @@ GameStates.Preloader.prototype = {
         this.preloadBar = this.add.sprite(this.game.width / 2 - 100, this.game.height / 2, 'preloaderBar');
         this.load.setPreloadSprite(this.preloadBar);
         // load all game assets
-        // images, spritesheets, atlases, audio etc..
         this.load.image('container', 'assets/container.png');
-        this.load.image('logo', 'assets/phaser2.png');
+        this.load.image('crane-top', 'assets/crane_top.png');
+        this.load.image('cabin', 'assets/container.png');
+        this.load.image('deck', 'assets/deck.png');
+        this.load.image('bg', 'assets/sky.png');
     },
 
     create: function () {
