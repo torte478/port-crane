@@ -10,8 +10,8 @@ GameStates.Preloader.prototype = {
         this.load.setPreloadSprite(this.preloadBar);
         // load all game assets
         this.load.image('container', 'assets/container.png');
-        this.load.image('crane-top', 'assets/crane_top.png');
-        this.load.image('cabin', 'assets/container.png');
+        this.load.image('rails', 'assets/crane_top.png');
+        this.load.image('hoist', 'assets/container.png');
         this.load.image('deck', 'assets/deck.png');
         this.load.image('bg', 'assets/sky.png');
     },
