@@ -1,10 +1,26 @@
 ﻿function DataForVisualization(
-    deckHeight, 
-    containers, 
-    hoistX) {
+    deckHeight,
+    containers,
+    hoistX,
+    hoistY,
+    containerSpeedX,
+    containerSpeedY,
+    hoistSpeedX,
+    containerWeight,
+    windSpeed,
+    changeContainerSpeedY,
+    changeHoistSpeedX) {
     this.deckHeight = deckHeight
     this.containers = containers
     this.hoistX = hoistX
+    this.hoistY = hoistY
+    this.containerSpeedX = containerSpeedX
+    this.containerSpeedY = containerSpeedY
+    this.hoistSpeedX = hoistSpeedX
+    this.containerWeight = containerWeight
+    this.windSpeed = windSpeed
+    this.changeContainerSpeedY = changeContainerSpeedY
+    this.changeHoistSpeedX = changeHoistSpeedX
 }
 
 function Container(x, y) {
@@ -12,15 +28,84 @@ function Container(x, y) {
     this.y = y
 }
 
-var getData = function () {
-    var xs = [];
-    xs.push(new Container(800 * Math.random(), 100 + 400 * Math.random()))
-    var ret = new DataForVisualization(
-        Math.random() * 64 + 500, 
-        xs, 
-        Math.random() * 800)
+var oldData = null
+var MAX_CONTAINER_SPEED_Y = 4
+var MAX_CHANGE_SPEED = 0.5
+var MAX_HOIST_SPEED_X = 2
 
-    return ret
+var getData = function () {
+    var res = null
+    if (oldData == null) {
+        var xs = [];
+        xs.push(new Container(400, 120))
+        oldData = new DataForVisualization(
+            500,
+            xs,
+            400, 100,
+            0, 1, 0,
+            0.1, 0,
+            0, 0)
+    }
+
+    {
+        var aaa = new PortCraneFuzzyLogic()
+        var newSpeedX = aaa.getHorizontalMovement(oldData.windSpeed, oldData.containerSpeedX, oldData.hoistSpeedX)
+        var dist = oldData.deckHeight - oldData.containers[oldData.containers.length - 1].y
+        var newSpeedY = aaa.getVerticalMovement(dist, oldData.containerSpeedY)
+        newSpeedX *= MAX_HOIST_SPEED_X
+        newSpeedY *= MAX_CONTAINER_SPEED_Y
+        if (newSpeedX > 0)
+            newSpeedX = Math.min(newSpeedX, MAX_CHANGE_SPEED)
+        if (newSpeedX < 0)
+            newSpeedX = Math.max(newSpeedX, -MAX_CHANGE_SPEED)
+        if (newSpeedY > 0)
+            newSpeedY = Math.min(newSpeedY, MAX_CHANGE_SPEED)
+        if (newSpeedY < 0)
+            newSpeedY = Math.max(newSpeedY, -MAX_CHANGE_SPEED)
+        oldData.changeContainerSpeedY = newSpeedY
+        oldData.changeHoistSpeedX = newSpeedX
+    }
+    
+    doMove(oldData)
+    res = oldData
+    return res
+}
+
+var applyWindAndVerticalSpeed = function (data) {
+    var curX = data.containers[data.containers.length - 1].x
+    var curY = data.containers[data.containers.length - 1].y
+    var distToCabin = Math.sqrt((curX - data.hoistX) * (curX - data.hoistX) +
+                                (curY - data.hoistY) * (curY - data.hoistY))
+    var sinPhi = Math.abs(curX - data.hoistX) / distToCabin
+    var cosPhi = Math.abs(curY - data.hoistY) / distToCabin
+    var resultSpeed = data.containerSpeedX
+    if (curX < data.hoistX) {
+        resultSpeed += sinPhi * data.containerWeight
+    }
+    if (curX > data.hoistX) {
+        resultSpeed -= sinPhi * data.containerWeight
+    }
+    resultSpeed += cosPhi * data.windSpeed
+    resultSpeed *= 0.97
+    data.containerSpeedX = resultSpeed
+    data.containerSpeedY += data.changeContainerSpeedY
+    data.hoistSpeedX += data.changeHoistSpeedX
+    data.hoistSpeedX *= 0.99
+    if (data.hoistSpeedX > 0)
+        data.hoistSpeedX = Math.min(data.hoistSpeedX, MAX_HOIST_SPEED_X)
+    if (data.hoistSpeedX < 0)
+        data.hoistSpeedX = Math.max(data.hoistSpeedX, -MAX_HOIST_SPEED_X)
+    if (data.containerSpeedY > 0)
+        data.containerSpeedY = Math.min(data.containerSpeedY, MAX_CONTAINER_SPEED_Y)
+    if (data.containerSpeedY < 0)
+        data.containerSpeedY = Math.max(data.containerSpeedY, -MAX_CONTAINER_SPEED_Y)
+}
+
+var doMove = function (data) {
+    applyWindAndVerticalSpeed(data)
+    data.hoistX += data.hoistSpeedX
+    data.containers[data.containers.length - 1].y += data.containerSpeedY
+    data.containers[data.containers.length - 1].x += data.containerSpeedX
 }
 
 GameStates.Game = function (game) {
@@ -33,7 +118,7 @@ GameStates.Game.prototype = {
         this.hoist = this.add.sprite(0, 0, 'hoist')
         this.rails = this.add.sprite(0, 0, 'rails')
         this.bg = this.add.sprite(0, 0, 'bg')
-        this.deck  = this.add.sprite(this.world.centerX, 0, 'deck')
+        this.deck = this.add.sprite(this.world.centerX, 0, 'deck')
         this.deck.anchor.x = 0.5
         this.deck.anchor.y = 0
 
@@ -48,10 +133,10 @@ GameStates.Game.prototype = {
         }
     },
 
-    update: function () { 
+    update: function () {
         var data = getData()
 
-        var trunc = function(s) {
+        var trunc = function (s) {
             return String(s).substring(0, 6)
         }
 
@@ -59,7 +144,7 @@ GameStates.Game.prototype = {
                 " hoistX: " + trunc(data.hoistX)
 
         this.hoist.x = data.hoistX
-        this.deck.y  = data.deckHeight
+        this.deck.y = data.deckHeight
 
         for (i = 0; i < data.containers.length; ++i) {
             this.containers[i].x = data.containers[i].x
@@ -69,7 +154,7 @@ GameStates.Game.prototype = {
 
         this.ropeGraphics.clear()
         this.ropeGraphics.lineStyle(8, 0x333333);
-        this.ropeGraphics.moveTo(data.hoistX, 100);
+        this.ropeGraphics.moveTo(data.hoistX, data.hoistY);
         this.ropeGraphics.lineTo(data.containers[0].x, data.containers[0].y);
         var containerWidth = this.cache.getImage('container').width
         this.ropeGraphics.moveTo(data.hoistX + containerWidth, 100);
