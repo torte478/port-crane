@@ -29,12 +29,15 @@ function Container(x, y) {
 }
 
 var oldData = null
+var MAX_CONTAINER_SPEED_Y = 4
+var MAX_CHANGE_SPEED = 0.5
+var MAX_HOIST_SPEED_X = 2
 
 var getData = function () {
     var res = null
     if (oldData == null) {
         var xs = [];
-        xs.push(new Container(450, 140))
+        xs.push(new Container(400, 120))
         oldData = new DataForVisualization(
             500,
             xs,
@@ -44,6 +47,25 @@ var getData = function () {
             0, 0)
     }
 
+    {
+        var aaa = new PortCraneFuzzyLogic()
+        var newSpeedX = aaa.getHorizontalMovement(oldData.windSpeed, oldData.containerSpeedX, oldData.hoistSpeedX)
+        var dist = oldData.deckHeight - oldData.containers[oldData.containers.length - 1].y
+        var newSpeedY = aaa.getVerticalMovement(dist, oldData.containerSpeedY)
+        newSpeedX *= MAX_HOIST_SPEED_X
+        newSpeedY *= MAX_CONTAINER_SPEED_Y
+        if (newSpeedX > 0)
+            newSpeedX = Math.min(newSpeedX, MAX_CHANGE_SPEED)
+        if (newSpeedX < 0)
+            newSpeedX = Math.max(newSpeedX, -MAX_CHANGE_SPEED)
+        if (newSpeedY > 0)
+            newSpeedY = Math.min(newSpeedY, MAX_CHANGE_SPEED)
+        if (newSpeedY < 0)
+            newSpeedY = Math.max(newSpeedY, -MAX_CHANGE_SPEED)
+        oldData.changeContainerSpeedY = newSpeedY
+        oldData.changeHoistSpeedX = newSpeedX
+    }
+    
     doMove(oldData)
     res = oldData
     return res
@@ -69,6 +91,14 @@ var applyWindAndVerticalSpeed = function (data) {
     data.containerSpeedY += data.changeContainerSpeedY
     data.hoistSpeedX += data.changeHoistSpeedX
     data.hoistSpeedX *= 0.99
+    if (data.hoistSpeedX > 0)
+        data.hoistSpeedX = Math.min(data.hoistSpeedX, MAX_HOIST_SPEED_X)
+    if (data.hoistSpeedX < 0)
+        data.hoistSpeedX = Math.max(data.hoistSpeedX, -MAX_HOIST_SPEED_X)
+    if (data.containerSpeedY > 0)
+        data.containerSpeedY = Math.min(data.containerSpeedY, MAX_CONTAINER_SPEED_Y)
+    if (data.containerSpeedY < 0)
+        data.containerSpeedY = Math.max(data.containerSpeedY, -MAX_CONTAINER_SPEED_Y)
 }
 
 var doMove = function (data) {
@@ -81,8 +111,6 @@ var doMove = function (data) {
 GameStates.Game = function (game) {
 
 };
-
-
 
 GameStates.Game.prototype = {
     create: function () {
