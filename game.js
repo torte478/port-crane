@@ -42,12 +42,13 @@ var getData = function () {
             500,
             xs,
             400, 100,
-            0, 1, 0,
+            0, 0, 0,
             0.1, 0,
             0, 0)
     }
 
     {
+        oldData.windSpeed = document.querySelector('[name=windspeed]').value
         var aaa = new PortCraneFuzzyLogic()
         var newSpeedX = aaa.getHorizontalMovement(oldData.windSpeed, oldData.containerSpeedX, oldData.hoistSpeedX)
         var dist = oldData.deckHeight - oldData.containers[oldData.containers.length - 1].y

@@ -49,7 +49,7 @@ function PortCraneFuzzyLogic(){
 }
 
 PortCraneFuzzyLogic.prototype.getVerticalMovement = function(distToShip, currentSpeedY){
-    return 1;//this.verticalMovement.calc(distToShip);
+    return 0;//this.verticalMovement.calc(distToShip);
 }
 
 PortCraneFuzzyLogic.prototype.getHorizontalMovement = function(wind, containerSpeedX, cabinSpeedX){
