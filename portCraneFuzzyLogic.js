@@ -11,7 +11,7 @@ function PortCraneFuzzyLogic(){
     //ВХОДНЫЕ ПАРАМЕТРЫ
     //Расстояние до палубы
     verticalMovement.addInputSet(0, "Close", new FuzzyInterval(0, 0, 3, 4));
-    verticalMovement.addInputSet(0, "Far", new FuzzyInterval(3, 4, 100, 100));
+    verticalMovement.addInputSet(0, "Far", new FuzzyInterval(3, 4, 500, 500));
     //Скорость спуска груза
     verticalMovement.addInputSet(1, "Slow", new FuzzyInterval(0, 0, 1, 2));
     verticalMovement.addInputSet(1, "Fast", new FuzzyInterval(1, 2, 4, 4));
