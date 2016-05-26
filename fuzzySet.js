@@ -207,7 +207,7 @@ GeometrySystem.prototype.print = function(){
  */
 
 function FuzzyLogicSystem(){
-    this.inputSystem = {};
+    this.inputSystem = new Array();
     this.outputSystem = {};
     this.ruleMapping = {};
 
@@ -216,17 +216,23 @@ function FuzzyLogicSystem(){
     this.accuracy = 100;
 }
 
-FuzzyLogicSystem.prototype.setRule = function(from, to){
-    if (!(from in this.inputSystem))
-        throw new Error("Input system not contains current key");
+FuzzyLogicSystem.prototype.setRule = function(fromNames, to){
+    if (fromNames.length != this.inputSystem.length)
+        throw new Error("Wrong size of first parameter");
+    for (var i = 0; i < this.inputSystem.length; ++i)
+        if (!(fromNames[i] in this.inputSystem[i]))
+            throw new Error("Input system not contains current key");
     if (!(to in this.outputSystem))
         throw new Error("Output system not contains current key");
 
-    this.ruleMapping[from] = to;
+    this.ruleMapping[fromNames] = to;
 }
 
-FuzzyLogicSystem.prototype.addInputSet = function(name, fuzzySet){
-    this.inputSystem[name] = fuzzySet;
+FuzzyLogicSystem.prototype.addInputSet = function(index, name, fuzzySet){
+    for (var i = this.inputSystem.length; i < Math.max(index + 1, this.inputSystem.length); ++i)
+        this.inputSystem[i] = {};
+
+    this.inputSystem[index][name] = fuzzySet;
 }
 
 FuzzyLogicSystem.prototype.addOutputSet = function(name, fuzzySet){
@@ -254,15 +260,84 @@ FuzzyLogicSystem.prototype.calc = function(inputValue)
 {
     if (this.leftBorder == "NULL")
         return 0;
+    if (inputValue.length != this.inputSystem.length)
+        throw new Error("Wrong number of params");
 
     var resultShape = new GeometrySystem(this.leftBorder, this.rightBorder, this.accuracy);
-    for(var key in this.inputSystem){
-        if (!(key in this.ruleMapping))
-            throw new Error("There is not that rule");
 
-        var grade = this.inputSystem[key].getMembershipGrade(inputValue);
-        var outputSet = this.outputSystem[this.ruleMapping[key]];
-        resultShape.add(outputSet.getFuzzySetFromGrade(grade), grade);
+
+    switch(this.inputSystem.length){
+        case 1:
+            for(var key in this.inputSystem[0]){
+                if (!(key in this.ruleMapping))
+                    throw new Error("There is not that rule");
+
+                var grade = this.inputSystem[0][key].getMembershipGrade(inputValue[0]);
+                var outputSet = this.outputSystem[this.ruleMapping[key]];
+                resultShape.add(outputSet.getFuzzySetFromGrade(grade), grade);
+            }
+            break;
+
+        case 2:
+            for (var firstKey in this.inputSystem[0])
+                for (var secondKey in this.inputSystem[1]){
+                    var key = new Array(firstKey, secondKey);
+
+                    if (!(key in this.ruleMapping))
+                        throw new Error("There is not that rule");
+
+                    var grade = Math.max(
+                        this.inputSystem[0][firstKey].getMembershipGrade(inputValue[0]),
+                        this.inputSystem[1][secondKey].getMembershipGrade(inputValue[1])
+                    )
+                    console.log("grade = " + grade);
+                    if (grade > 0)
+                    {
+                        var outputSet = this.outputSystem[this.ruleMapping[key]];
+                        resultShape.add(outputSet.getFuzzySetFromGrade(grade), grade);
+                    }
+                }
+            break;
+
+        case 3:
+            for (var firstKey in this.inputSystem[0])
+                for (var secondKey in this.inputSystem[1])
+                    for (var thirdKey in this.inputSystem[2]){
+                        var key = new Array(firstKey, secondKey, thirdKey);
+
+                        if (!(key in this.ruleMapping))
+                            throw new Error("There is not that rule");
+
+                        var grade = Math.max(
+                            this.inputSystem[0][firstKey].getMembershipGrade(inputValue[0]),
+                            this.inputSystem[1][secondKey].getMembershipGrade(inputValue[1]),
+                            this.inputSystem[2][thirdKey].getMembershipGrade(inputValue[2])
+                        )
+                        console.log("grade = " + grade);
+                        if (grade > 0)
+                        {
+                            var outputSet = this.outputSystem[this.ruleMapping[key]];
+                            resultShape.add(outputSet.getFuzzySetFromGrade(grade), grade);
+                        }
+                }
+            break;
+
+        default:
+            throw new Error("I'm so sorry but that not implemented :((((");
     }
+
     return resultShape.evaluate();
 }
+
+// var res = new FuzzyLogicSystem();
+//
+// res.addInputSet(0, "One", new FuzzyNumber(0, 1, 2));
+// res.addInputSet(1, "Two", new FuzzyNumber(0, 1, 2));
+// res.addInputSet(2, "Three", new FuzzyNumber(0, 1, 2));
+//
+// res.addOutputSet("Alone", new FuzzyNumber(0, 1, 2));
+//
+// res.setRule(["One", "Two", "Three"], "Alone");
+//
+// console.log(res);
+// console.log(res.calc(new Array(1, 1, 1)));
