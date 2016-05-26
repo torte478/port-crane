@@ -115,13 +115,14 @@ GameStates.Game = function (game) {
 
 GameStates.Game.prototype = {
     create: function () {
-        var hoistHeight = 100
-        this.hoist = this.add.sprite(0, 0, 'hoist')
-        this.rails = this.add.sprite(0, 0, 'rails')
         this.bg = this.add.sprite(0, 0, 'bg')
         this.deck = this.add.sprite(this.world.centerX, 0, 'deck')
         this.deck.anchor.x = 0.5
         this.deck.anchor.y = 0
+        this.rails = this.add.sprite(0, 0, 'rails')
+        this.hoist = this.add.sprite(0, 100, 'hoist')
+        this.hoist.anchor.y = 0.7
+        this.rails.anchor.y = 0.1
 
         this.ropeGraphics = game.add.graphics(0, 0);
 
