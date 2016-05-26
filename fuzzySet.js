@@ -222,7 +222,7 @@ FuzzyLogicSystem.prototype.setRule = function(fromNames, to){
     for (var i = 0; i < this.inputSystem.length; ++i)
         if (!(fromNames[i] in this.inputSystem[i]))
             throw new Error("Input system not contains current key");
-    if (!(to in this.outputSystem))
+    if (to != 0 && !(to in this.outputSystem))
         throw new Error("Output system not contains current key");
 
     this.ruleMapping[fromNames] = to;
@@ -270,7 +270,10 @@ FuzzyLogicSystem.prototype.calc = function(inputValue)
         case 1:
             for(var key in this.inputSystem[0]){
                 if (!(key in this.ruleMapping))
-                    throw new Error("There is not that rule");
+                    continue;
+
+                if (this.ruleMapping[key] == 0)
+                    continue;
 
                 var grade = this.inputSystem[0][key].getMembershipGrade(inputValue[0]);
                 var outputSet = this.outputSystem[this.ruleMapping[key]];
@@ -284,13 +287,15 @@ FuzzyLogicSystem.prototype.calc = function(inputValue)
                     var key = new Array(firstKey, secondKey);
 
                     if (!(key in this.ruleMapping))
-                        throw new Error("There is not that rule");
+                        continue;
+                    if (this.ruleMapping[key] == 0)
+                        continue;
 
                     var grade = Math.max(
                         this.inputSystem[0][firstKey].getMembershipGrade(inputValue[0]),
                         this.inputSystem[1][secondKey].getMembershipGrade(inputValue[1])
                     )
-                    console.log("grade = " + grade);
+                    //console.log("grade = " + grade);
                     if (grade > 0)
                     {
                         var outputSet = this.outputSystem[this.ruleMapping[key]];
@@ -306,14 +311,16 @@ FuzzyLogicSystem.prototype.calc = function(inputValue)
                         var key = new Array(firstKey, secondKey, thirdKey);
 
                         if (!(key in this.ruleMapping))
-                            throw new Error("There is not that rule");
+                            continue;
+                        if (this.ruleMapping[key] == 0)
+                            continue;
 
                         var grade = Math.max(
                             this.inputSystem[0][firstKey].getMembershipGrade(inputValue[0]),
                             this.inputSystem[1][secondKey].getMembershipGrade(inputValue[1]),
                             this.inputSystem[2][thirdKey].getMembershipGrade(inputValue[2])
                         )
-                        console.log("grade = " + grade);
+                        //console.log("grade = " + grade);
                         if (grade > 0)
                         {
                             var outputSet = this.outputSystem[this.ruleMapping[key]];
@@ -337,7 +344,7 @@ FuzzyLogicSystem.prototype.calc = function(inputValue)
 //
 // res.addOutputSet("Alone", new FuzzyNumber(0, 1, 2));
 //
-// res.setRule(["One", "Two", "Three"], "Alone");
+// res.setRule(["One", "Two", "Three"], 0);
 //
 // console.log(res);
 // console.log(res.calc(new Array(1, 1, 1)));
