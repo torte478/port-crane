@@ -48,7 +48,7 @@ var getData = function () {
     }
 
     {
-        oldData.windSpeed = document.querySelector('[name=windspeed]').value
+        oldData.windSpeed = document.querySelector('[name=windspeed]').value / 150.0
         var aaa = new PortCraneFuzzyLogic()
         var newSpeedX = aaa.getHorizontalMovement(oldData.windSpeed, oldData.containerSpeedX, oldData.hoistSpeedX)
         var dist = oldData.deckHeight - oldData.containers[oldData.containers.length - 1].y
@@ -87,7 +87,7 @@ var applyWindAndVerticalSpeed = function (data) {
         resultSpeed -= sinPhi * data.containerWeight
     }
     resultSpeed += cosPhi * data.windSpeed
-    resultSpeed *= 0.97
+    resultSpeed *= 0.93
     data.containerSpeedX = resultSpeed
     data.containerSpeedY += data.changeContainerSpeedY
     data.hoistSpeedX += data.changeHoistSpeedX
