@@ -123,6 +123,7 @@ GameStates.Game.prototype = {
         this.rails = this.add.sprite(0, 0, 'rails')
         this.hoist = this.add.sprite(0, 100, 'hoist')
         this.hoist.anchor.y = 0.7
+        this.hoist.anchor.x = 0.1
         this.rails.anchor.y = 0.1
 
         this.ropeGraphics = game.add.graphics(0, 0);
