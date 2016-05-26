@@ -8,28 +8,28 @@ function PortCraneFuzzyLogic(){
     //=====================
     var verticalMovement = new FuzzyLogicSystem();
 
-    //Р’РҐРћР”РќР«Р• РџРђР РђРњР•РўР Р«
-    //Р Р°СЃСЃС‚РѕСЏРЅРёРµ РґРѕ РїР°Р»СѓР±С‹
+    //ВХОДНЫЕ ПАРАМЕТРЫ
+    //Расстояние до палубы
     verticalMovement.addInputSet(0, "Close", new FuzzyInterval(0, 0, 3, 4));
     verticalMovement.addInputSet(0, "Far", new FuzzyInterval(3, 4, 100, 100));
-    //РЎРєРѕСЂРѕСЃС‚СЊ СЃРїСѓСЃРєР° РіСЂСѓР·Р°
+    //Скорость спуска груза
     verticalMovement.addInputSet(1, "Slow", new FuzzyInterval(0, 0, 1, 2));
     verticalMovement.addInputSet(1, "Fast", new FuzzyInterval(1, 2, 4, 4));
 
-    //Р’Р«РҐРћР”РќР«Р• РџРђР РђРњР•РўР Р«
+    //ВЫХОДНЫЕ ПАРАМЕТРЫ
     verticalMovement.addOutputSet("Reduce", new FuzzyInterval(-1, -1, -0.5, 0));
     verticalMovement.addOutputSet("Nothing", new FuzzyNumber(-0.5, 0, 0.5));
     verticalMovement.addOutputSet("Increase", new FuzzyInterval(0, 0.5, 1, 1));
 
-    //РџР РђР’РР›Рђ
-    //==========Р Р°СЃСЃС‚РѕСЏРЅРёРµ РґРѕ РїР°Р»СѓР±С‹===РЎРєРѕСЂРѕСЃС‚СЊ СЃРїСѓСЃРєР° РіСЂСѓР·Р°=====
+    //ПРАВИЛА
+    //==========Расстояние до палубы===Скорость спуска груза=====
     verticalMovement.setRule(["Close", "Slow"], "Nothing");
     verticalMovement.setRule(["Close", "Fast"], "Reduce");
     //----------------------------------------------------
     verticalMovement.setRule(["Far",   "Slow"], "Increase");
     verticalMovement.setRule(["Far",   "Fast"], "Nothing");
 
-    //РўРћР§РќРћРЎРўР¬
+    //ТОЧНОСТЬ
     verticalMovement.setAccuracy(100);
 
     this.verticalMovement = verticalMovement;
@@ -39,36 +39,36 @@ function PortCraneFuzzyLogic(){
     //=====================
     var horizontalMovement = new FuzzyLogicSystem();
 
-    //Р’РҐРћР”РќР«Р• РџРђР РђРњР•РўР Р«
-    //РЎРјРµС‰РµРЅРёРµ РѕС‚ С†РµР»Рё РїРѕ X
+    //ВХОДНЫЕ ПАРАМЕТРЫ
+    //Смещение от цели по X
     horizontalMovement.addInputSet(0, "To left", new FuzzyInterval(-5, -5, -2, -1));
     horizontalMovement.addInputSet(0, "No chng", new FuzzyNumber(-2, 0, 2));
     horizontalMovement.addInputSet(0, "To right", new FuzzyInterval(1, 2, 5, 5));
-    //РЎРєРѕСЂРѕСЃС‚СЊ РєРѕРЅС‚РµР№РЅРµСЂР° РїРѕ РҐ
+    //Скорость контейнера по Х
     horizontalMovement.addInputSet(1, "Move left", new FuzzyInterval(-5, -5, -2, -1));
     horizontalMovement.addInputSet(1, "No move", new FuzzyNumber(-2, 0, 2));
     horizontalMovement.addInputSet(1, "Move right", new FuzzyInterval(1, 2, 5, 5));
 
-    //Р’Р«РҐРћР”РќР«Р• РџРђР РђРњР•РўР Р«
+    //ВЫХОДНЫЕ ПАРАМЕТРЫ
     horizontalMovement.addOutputSet("Move left", new FuzzyInterval(-1, -1, -0.5, 0));
     horizontalMovement.addOutputSet("Nothing", new FuzzyNumber(-0.5, 0, 0.5));
     horizontalMovement.addOutputSet("Move right", new FuzzyInterval(0, 0.5, 1, 1));
 
-    //РџР РђР’РР›Рђ
-    //==========================РЎРјРµС‰РµРЅРёРµ====РљРѕРЅС‚РµР№РЅРµСЂ=========
+    //ПРАВИЛА
+    //==========================Смещение====Контейнер=========
     horizontalMovement.setRule(["To left" , "Move left" ], "Move right");
     horizontalMovement.setRule(["To left" , "No move"   ], "Move right");
     horizontalMovement.setRule(["To left" , "Move right"], "Nothing");
-    //==========================РЎРјРµС‰РµРЅРёРµ====РљРѕРЅС‚РµР№РЅРµСЂ=========
+    //==========================Смещение====Контейнер=========
     horizontalMovement.setRule(["No chng" , "Move left" ], "Move right");
     horizontalMovement.setRule(["No chng" , "No move"   ], "Nothing");
     horizontalMovement.setRule(["No chng" , "Move right"], "Move left");
-    //==========================РЎРјРµС‰РµРЅРёРµ====РљРѕРЅС‚РµР№РЅРµСЂ========
+    //==========================Смещение====Контейнер========
     horizontalMovement.setRule(["To right", "Move left" ], "Nothing");
     horizontalMovement.setRule(["To right", "No move"   ], "Move left");
     horizontalMovement.setRule(["To right", "Move right"], "Move left");
 
-    //РўРћР§РќРћРЎРўР¬
+    //ТОЧНОСТЬ
     horizontalMovement.setAccuracy(100);
 
     this.horizontalMovement = horizontalMovement;
