@@ -8,7 +8,8 @@
     hoistSpeedX,
     containerWeight,
     windSpeed,
-    changeContainerSpeedY) {
+    changeContainerSpeedY,
+    changeHoistSpeedX) {
     this.deckHeight = deckHeight
     this.containers = containers
     this.hoistX = hoistX
@@ -19,6 +20,7 @@
     this.containerWeight = containerWeight
     this.windSpeed = windSpeed
     this.changeContainerSpeedY = changeContainerSpeedY
+    this.changeHoistSpeedX = changeHoistSpeedX
 }
 
 function Container(x, y) {
@@ -39,8 +41,9 @@ var getData = function () {
             400, 100,
             0, 1, 0,
             0.1, 0,
-            0)
+            0, 0)
     }
+
     doMove(oldData)
     res = oldData
     return res
@@ -64,6 +67,8 @@ var applyWindAndVerticalSpeed = function (data) {
     resultSpeed *= 0.97
     data.containerSpeedX = resultSpeed
     data.containerSpeedY += data.changeContainerSpeedY
+    data.hoistSpeedX += data.changeHoistSpeedX
+    data.hoistSpeedX *= 0.99
 }
 
 var doMove = function (data) {
