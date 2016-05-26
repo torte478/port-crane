@@ -3,46 +3,97 @@
  */
 
 function PortCraneFuzzyLogic(){
+    //=====================
     //VERTICAL MOVEMENT
+    //=====================
     var verticalMovement = new FuzzyLogicSystem();
 
-    verticalMovement.addInputSet("Very close", new FuzzyInterval(0, 0, 2, 5));
-    verticalMovement.addInputSet("Close", new FuzzyInterval(2, 5, 8, 10));
-    verticalMovement.addInputSet("Normal", new FuzzyInterval(7, 10, 15, 20));
-    verticalMovement.addInputSet("Far", new FuzzyInterval(16, 20, 25, 30));
-    verticalMovement.addInputSet("Very far", new FuzzyInterval(25, 30, 50, 50));
+    //ВХОДНЫЕ ПАРАМЕТРЫ
+    //Расстояние до палубы
+    verticalMovement.addInputSet(0, "Close", new FuzzyInterval(0, 0, 3, 4));
+    verticalMovement.addInputSet(0, "Far", new FuzzyInterval(3, 4, 100, 100));
+    //Скорость спуска груза
+    verticalMovement.addInputSet(1, "Slow", new FuzzyInterval(0, 0, 1, 2));
+    verticalMovement.addInputSet(1, "Fast", new FuzzyInterval(1, 2, 4, 4));
 
-    verticalMovement.addOutputSet("Very slow", new FuzzyInterval(0, 0, 1, 2));
-    verticalMovement.addOutputSet("Slow", new FuzzyInterval(1, 2, 3, 4));
-    verticalMovement.addOutputSet("Normal", new FuzzyInterval(3, 4, 5, 6));
-    verticalMovement.addOutputSet("Fast", new FuzzyInterval(5, 6, 7, 8));
-    verticalMovement.addOutputSet("Very fast", new FuzzyInterval(7, 8, 9, 10));
+    //ВЫХОДНЫЕ ПАРАМЕТРЫ
+    verticalMovement.addOutputSet("Reduce", new FuzzyInterval(-1, -1, -0.5, 0));
+    verticalMovement.addOutputSet("Nothing", new FuzzyNumber(-0.5, 0, 0.5));
+    verticalMovement.addOutputSet("Increase", new FuzzyInterval(0, 0.5, 1, 1));
 
-    verticalMovement.setRule("Very close", "Very slow");
-    verticalMovement.setRule("Close", "Slow");
-    verticalMovement.setRule("Normal", "Normal");
-    verticalMovement.setRule("Far", "Fast");
-    verticalMovement.setRule("Very far", "Very fast");
+    //ПРАВИЛА
+    verticalMovement.setRule(["Close", "Slow"], "Nothing");  verticalMovement.setRule(["Close", "Fast"], "Reduce");
+    verticalMovement.setRule(["Far",   "Slow"], "Increase"); verticalMovement.setRule(["Far",   "Fast"], "Nothing");
 
+    //ТОЧНОСТЬ
     verticalMovement.setAccuracy(1000);
 
     this.verticalMovement = verticalMovement;
 
+    //=====================
     //HORIZONTAL MOVEMENT
+    //=====================
     var horizontalMovement = new FuzzyLogicSystem();
 
-    horizontalMovement.addInputSet("Left", new FuzzyInterval(-20, -20, -10, -5));
-    horizontalMovement.addInputSet("Center", new FuzzyInterval(-10, -5, 5, 10));
-    horizontalMovement.addInputSet("Right", new FuzzyInterval(5, 10, 20, 20));
+    //ВХОДНЫЕ ПАРАМЕТРЫ
+    //Смещение от цели по X
+    horizontalMovement.addInputSet(0, "To left", new FuzzyInterval(-5, -5, -2, -1));
+    horizontalMovement.addInputSet(0, "No chng", new FuzzyNumber(-2, 0, 2));
+    horizontalMovement.addInputSet(0, "To right", new FuzzyInterval(1, 2, 5, 5));
+    //Скорость контейнера по Х
+    horizontalMovement.addInputSet(1, "Move left", new FuzzyInterval(-5, -5, -2, -1));
+    horizontalMovement.addInputSet(1, "No move", new FuzzyNumber(-2, 0, 2));
+    horizontalMovement.addInputSet(1, "Move right", new FuzzyInterval(1, 2, 5, 5));
+    //Скорость кабины по X
+    horizontalMovement.addInputSet(2, "Move left", new FuzzyInterval(-5, -5, -2, -1));
+    horizontalMovement.addInputSet(2, "No move", new FuzzyNumber(-2, 0, 2));
+    horizontalMovement.addInputSet(2, "Move right", new FuzzyInterval(1, 2, 5, 5));
 
-    horizontalMovement.addOutputSet("Move left", new FuzzyInterval(-10, -10, -5, -2));
-    horizontalMovement.addOutputSet("Don't move", new FuzzyInterval(-5, -2, 2, 5));
-    horizontalMovement.addOutputSet("Move right", new FuzzyInterval(2, 5, 10, 10));
+    //ВЫХОДНЫЕ ПАРАМЕТРЫ
+    horizontalMovement.addOutputSet("Reduce", new FuzzyInterval(-1, -1, -0.5, 0));
+    horizontalMovement.addOutputSet("Nothing", new FuzzyNumber(-0.5, 0, 0.5));
+    horizontalMovement.addOutputSet("Increase", new FuzzyInterval(0, 0.5, 1, 1));
 
-    horizontalMovement.setRule("Left", "Move right");
-    horizontalMovement.setRule("Center", "Don't move");
-    horizontalMovement.setRule("Right", "Move left");
+    //ПРАВИЛА
+    //==========================Смещение====Контейнер======Кабина==========
+    horizontalMovement.setRule(["To left" , "Move left" , "Move left" ], "Nothing");
+    horizontalMovement.setRule(["To left" , "Move left" , "No move"   ], "Nothing");
+    horizontalMovement.setRule(["To left" , "Move left" , "Move right"], "Nothing");
+    //----------------------------------------------------------------------
+    horizontalMovement.setRule(["To left" , "No move"   , "Move left" ], "Nothing");
+    horizontalMovement.setRule(["To left" , "No move"   , "No move"   ], "Nothing");
+    horizontalMovement.setRule(["To left" , "No move"   , "Move right"], "Nothing");
+    //----------------------------------------------------------------------
+    horizontalMovement.setRule(["To left" , "Move right", "Move left" ], "Nothing");
+    horizontalMovement.setRule(["To left" , "Move right", "No move"   ], "Nothing");
+    horizontalMovement.setRule(["To left" , "Move right", "Move right"], "Nothing");
+    //==========================Смещение====Контейнер======Кабина===========
+    horizontalMovement.setRule(["No chng" , "Move left" , "Move left" ], "Nothing");
+    horizontalMovement.setRule(["No chng" , "Move left" , "No move"   ], "Nothing");
+    horizontalMovement.setRule(["No chng" , "Move left" , "Move right"], "Nothing");
+    //----------------------------------------------------------------------
+    horizontalMovement.setRule(["No chng" , "No move"   , "Move left" ], "Nothing");
+    horizontalMovement.setRule(["No chng" , "No move"   , "No move"   ], "Nothing");
+    horizontalMovement.setRule(["No chng" , "No move"   , "Move right"], "Nothing");
+    //----------------------------------------------------------------------
+    horizontalMovement.setRule(["No chng" , "Move right", "Move left" ], "Nothing");
+    horizontalMovement.setRule(["No chng" , "Move right", "No move"   ], "Nothing");
+    horizontalMovement.setRule(["No chng" , "Move right", "Move right"], "Nothing");
+    //==========================Смещение====Контейнер======Кабина==========
+    horizontalMovement.setRule(["To right", "Move left" , "Move left" ], "Nothing");
+    horizontalMovement.setRule(["To right", "Move left" , "No move"   ], "Nothing");
+    horizontalMovement.setRule(["To right", "Move left" , "Move right"], "Nothing");
+    //----------------------------------------------------------------------
+    horizontalMovement.setRule(["To right", "No move"   , "Move left" ], "Nothing");
+    horizontalMovement.setRule(["To right", "No move"   , "No move"   ], "Nothing");
+    horizontalMovement.setRule(["To right", "No move"   , "Move right"], "Nothing");
+    //----------------------------------------------------------------------
+    horizontalMovement.setRule(["To right", "Move right", "Move left" ], "Nothing");
+    horizontalMovement.setRule(["To right", "Move right", "No move"   ], "Nothing");
+    horizontalMovement.setRule(["To right", "Move right", "Move right"], "Nothing");
 
+
+    //ТОЧНОСТЬ
     horizontalMovement.setAccuracy(100);
 
     this.horizontalMovement = horizontalMovement;
