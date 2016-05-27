@@ -1,4 +1,6 @@
-﻿Array.prototype.last = function () { return this[this.length - 1]; }
+﻿Array.prototype.last = function () {
+    return this[this.length - 1];
+}
 
 function DataForVisualization(deckHeight,
                               containers,
@@ -28,30 +30,31 @@ function DataForVisualization(deckHeight,
     this.targetY = targetY
 }
 
-function Container(x, y) {
+function Container(x, y, slotXId, slotYId) {
     this.x = x
     this.y = y
+    this.slotXId = slotXId
+    this.slotYId = slotYId
 }
 
+var arrayOldData = [null, null, null]
+var countContainersOnSlot = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]
 var oldData = null
 var MAX_CONTAINER_SPEED_Y = 4
 var MAX_CHANGE_SPEED = 0.1
 var MAX_HOIST_SPEED_X = 1
-var currentTime = 0
+var currentTime = Math.random() * 10
 var CHANGE_TIME = 0.01
 var wavesK = 25
 var CONTAINER_WIDTH = 100
 var isComplete = false
 var SUCCESS_DISTANCE = 1
-var COUNT_SUCCESS = 0
-var NEED_SUCCESS = 25
+var isRunning = false
 
-var getData = function () {
-    var res = null
-    if (oldData == null) {
+var getData = function (targetSlotX, targetSlotZ) {
+    if (arrayOldData[targetSlotZ] == null) {
         var xs = [];
-        xs.push(new Container(100, 120))
-        oldData = new DataForVisualization(
+        arrayOldData = new DataForVisualization(
             500,
             xs,
             100, 100,
@@ -59,39 +62,38 @@ var getData = function () {
             0.1, 0,
             0, 0,
             100, 500)
-        currentTime = Math.random()*10
+        oldData = arrayOldData[targetSlotZ]
     }
-    
+
+    if (isRunning == false) {
+        oldData.targetX = 100 + 100 * targetSlotX
+        oldData.containers.push(new Container(oldData.hoistX, 120, targetSlotX, countContainersOnSlot[targetSlotZ][targetSlotX]))
+        isRunning = true
+    }
+
     wavesK = global.wavesK
 
     var containerHeight = game.cache.getImage('container').height
     oldData.deckHeight = 500 + Math.sin(currentTime) * wavesK
     currentTime += CHANGE_TIME
 
-    if (-(oldData.containers.last().y + containerHeight  +
-            (Math.floor((oldData.containers.length - 1) / 5) * containerHeight) - oldData.deckHeight) <= SUCCESS_DISTANCE) {
-        ++COUNT_SUCCESS
-        if (COUNT_SUCCESS == NEED_SUCCESS) {
-            isComplete = true
-        } else {
-            oldData.containers.push(new Container(oldData.hoistX, 120))
-            oldData.targetX = 100 + 100 * ((oldData.containers.length - 1) % 5)
-            if (oldData.containers.length > 5) {
-                oldData.targetX = oldData.containers[oldData.containers.length - 6].x
-            }
-        }
+    if (-(oldData.containers.last().y + containerHeight +
+        (countContainersOnSlot[targetSlotZ][targetSlotX] * containerHeight) - oldData.deckHeight) <= SUCCESS_DISTANCE) {
+        isComplete = true
+        isRunning = false
+        countContainersOnSlot[targetSlotZ][targetSlotX]++;
     }
-    oldData.targetY = oldData.deckHeight - Math.floor((oldData.containers.length - 1) / 5) * containerHeight
+    oldData.targetY = oldData.deckHeight - countContainersOnSlot[targetSlotZ][targetSlotX] * containerHeight
 
     for (i = 0; i < oldData.containers.length - 1; ++i) {
         oldData.containers[i].y = oldData.deckHeight - containerHeight;
-        oldData.containers[i].y -= containerHeight * Math.floor(i / 5);
+        oldData.containers[i].y -= containerHeight * oldData.containers[i].slotYId;
     }
 
     if (isComplete) {
         for (i = 0; i < oldData.containers.length; ++i) {
             oldData.containers[i].y = oldData.deckHeight - containerHeight;
-            oldData.containers[i].y -= containerHeight * Math.floor(i / 5);
+            oldData.containers[i].y -= containerHeight * oldData.containers[i].slotYId;
         }
         return oldData
     }
@@ -101,8 +103,7 @@ var getData = function () {
         var aaa = new PortCraneFuzzyLogic()
         var distX = oldData.containers.last().x - oldData.targetX
         var newSpeedX = aaa.getHorizontalMovement(distX, oldData.containerSpeedX)
-        var dist = Math.abs(oldData.deckHeight - oldData.containers.last().y - containerHeight)
-        dist -= containerHeight * Math.floor((oldData.containers.length - 1) / 5)
+        var dist = Math.abs(oldData.deckHeight - oldData.containers.last().y - containerHeight - containerHeight * oldData.containers.last().slotYId)
         var newSpeedY = aaa.getVerticalMovement(dist, oldData.containerSpeedY, distX)
 
         newSpeedX *= MAX_HOIST_SPEED_X
@@ -215,10 +216,10 @@ GameStates.Game.prototype = {
             this.containers[i].y = data.containers[i].y
             this.containers[i].visible = true
         }
-        
+
         var g = this.ropeGraphics;
         g.clear()
-        
+
         if (!isComplete) {
             var rw = 4, leftRopeX = data.hoistX, topRopeY = data.hoistY + 9,
                 cx = data.containers[data.containers.length - 1].x,
