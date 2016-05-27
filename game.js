@@ -238,6 +238,8 @@ GameStates.Game.prototype = {
     },
 
     update: function () {
+        var g = this.ropeGraphics;
+        g.clear()
 
         if (!isComplete) {
             updateWindSpeed()  
@@ -263,8 +265,6 @@ GameStates.Game.prototype = {
                 this.containers[i].visible = true
             }
             
-            var g = this.ropeGraphics;
-            g.clear()
         
             var rw = 4, leftRopeX = data.hoistX, topRopeY = data.hoistY + 9,
                 cx = data.containers[data.containers.length - 1].x,
