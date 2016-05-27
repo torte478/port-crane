@@ -77,6 +77,8 @@ var isComplete = false
 
 var SUCCESS_DISTANCE = 2
 var TARGET_X = 100
+var COUNT_SUCCESS = 0
+var NEED_SUCCESS = 25
 
 var getData = function () {
     var res = null
@@ -95,13 +97,26 @@ var getData = function () {
     oldData.deckHeight = 500 + Math.sin(currentTime) * wavesK
     currentTime += CHANGE_TIME
 
-    if (Math.abs(oldData.containers[oldData.containers.length - 1].y + game.cache.getImage('container').height - oldData.deckHeight) <= SUCCESS_DISTANCE) {
-        isComplete = true
+    if (Math.abs(oldData.containers[oldData.containers.length - 1].y + game.cache.getImage('container').height  +
+            (Math.floor((oldData.containers.length - 1) / 5) ? game.cache.getImage('container').height : 0) - oldData.deckHeight) <= SUCCESS_DISTANCE) {
+        ++COUNT_SUCCESS
+        if (COUNT_SUCCESS == NEED_SUCCESS) {
+            isComplete = true
+        } else {
+            oldData.containers.push(new Container(oldData.containers[oldData.containers.length - 1].x, 120))
+            TARGET_X = 100 + 125 * ((oldData.containers.length - 1) % 5)
+        }
+    }
+
+    for (i = 0; i < oldData.containers.length - 1; ++i) {
+        oldData.containers[i].y = oldData.deckHeight - game.cache.getImage('container').height;
+        oldData.containers[i].y -= game.cache.getImage('container').height * Math.floor(i / 5);
     }
 
     if (isComplete) {
         for (i = 0; i < oldData.containers.length; ++i) {
             oldData.containers[i].y = oldData.deckHeight - game.cache.getImage('container').height;
+            oldData.containers[i].y -= game.cache.getImage('container').height * Math.floor(i / 5);
         }
         return oldData
     }
@@ -112,6 +127,7 @@ var getData = function () {
         var distX = oldData.containers[oldData.containers.length - 1].x - TARGET_X
         var newSpeedX = aaa.getHorizontalMovement(distX, oldData.containerSpeedX)
         var dist = Math.abs(oldData.deckHeight - oldData.containers[oldData.containers.length - 1].y - game.cache.getImage('container').height)
+        dist -= game.cache.getImage('container').height * Math.floor((oldData.containers.length - 1) / 5)
         var newSpeedY = aaa.getVerticalMovement(dist, oldData.containerSpeedY)
         newSpeedX *= MAX_HOIST_SPEED_X
         newSpeedY *= MAX_CONTAINER_SPEED_Y
