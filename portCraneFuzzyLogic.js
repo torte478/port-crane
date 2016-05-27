@@ -17,25 +17,54 @@ function PortCraneFuzzyLogic(){
     verticalMovement.addInputSet(1, "Slow", new FuzzyInterval(0, 0, 1, 2));
     verticalMovement.addInputSet(1, "Normal", new FuzzyNumber(1, 2, 3));
     verticalMovement.addInputSet(1, "Fast", new FuzzyInterval(2, 3, 4, 4));
+    //ParallaX
+    verticalMovement.addInputSet(2, "Close", new FuzzyInterval(0, 0, 10, 15));
+    verticalMovement.addInputSet(2, "Normal", new FuzzyInterval(10, 15, 25, 50));
+    verticalMovement.addInputSet(2, "Far", new FuzzyInterval(25, 50, 1000, 1000));
 
     //OUTPUT PARAMETERS
-    verticalMovement.addOutputSet("Reduce", new FuzzyInterval(-0.005, -0.005, -0.0005, 0));
-    verticalMovement.addOutputSet("Nothing", new FuzzyNumber(-0.0005, 0, 0.0005));
-    verticalMovement.addOutputSet("Increase", new FuzzyInterval(0, 0.0005, 0.002, 0.002));
+    verticalMovement.addOutputSet("Fast reduce", new FuzzyInterval(-1, -1, -0.5, -0.2));
+    verticalMovement.addOutputSet("Reduce", new FuzzyInterval(-0.5, -0.5, -0.2, 0));
+    verticalMovement.addOutputSet("Nothing", new FuzzyNumber(-0.2, 0, 0.2));
+    verticalMovement.addOutputSet("Increase", new FuzzyInterval(0, 0.2, 1, 1));
 
     //RULES
-    //==========Distance to ship ===Vertical speed=====
-    verticalMovement.setRule(["Close", "Slow"], "Nothing");
-    verticalMovement.setRule(["Close", "Normal"], "Reduce");
-    verticalMovement.setRule(["Close", "Fast"], "Reduce");
+    //==========Distance to ship ===Vertical speed==Parallax
+    verticalMovement.setRule(["Close", "Slow", "Close"],   "Nothing");
+    verticalMovement.setRule(["Close", "Normal", "Close"], "Reduce");
+    verticalMovement.setRule(["Close", "Fast", "Close"],   "Fast reduce");
     //----------------------------------------------------
-    verticalMovement.setRule(["Normal", "Slow"], "Increase");
-    verticalMovement.setRule(["Normal", "Normal"], "Nothing");
-    verticalMovement.setRule(["Normal", "Fast"], "Reduce");
+    verticalMovement.setRule(["Normal", "Slow", "Close"],   "Increase");
+    verticalMovement.setRule(["Normal", "Normal", "Close"], "Nothing");
+    verticalMovement.setRule(["Normal", "Fast", "Close"],   "Reduce");
     //----------------------------------------------------
-    verticalMovement.setRule(["Far",   "Slow"], "Increase");
-    verticalMovement.setRule(["Far",   "Normal"], "Increase");
-    verticalMovement.setRule(["Far",   "Fast"], "Nothing");
+    verticalMovement.setRule(["Far",   "Slow", "Close"], "Increase");
+    verticalMovement.setRule(["Far",   "Normal", "Close"], "Increase");
+    verticalMovement.setRule(["Far",   "Fast", "Close"], "Nothing");
+    //==========Distance to ship ===Vertical speed==Parallax
+    verticalMovement.setRule(["Close", "Slow", "Normal"],   "Nothing");
+    verticalMovement.setRule(["Close", "Normal", "Normal"], "Reduce");
+    verticalMovement.setRule(["Close", "Fast", "Normal"],   "Fast reduce");
+    //----------------------------------------------------
+    verticalMovement.setRule(["Normal", "Slow", "Normal"],   "Increase");
+    verticalMovement.setRule(["Normal", "Normal", "Normal"], "Nothing");
+    verticalMovement.setRule(["Normal", "Fast", "Normal"],   "Reduce");
+    //----------------------------------------------------
+    verticalMovement.setRule(["Far",   "Slow", "Normal"], "Increase");
+    verticalMovement.setRule(["Far",   "Normal", "Normal"], "Increase");
+    verticalMovement.setRule(["Far",   "Fast", "Normal"], "Nothing");
+    //==========Distance to ship ===Vertical speed==Parallax
+    verticalMovement.setRule(["Close", "Slow", "Far"],   "Fast reduce");
+    verticalMovement.setRule(["Close", "Normal", "Far"], "Fast reduce");
+    verticalMovement.setRule(["Close", "Fast", "Far"],   "Fast reduce");
+    //----------------------------------------------------
+    verticalMovement.setRule(["Normal", "Slow", "Far"],   "Fast reduce");
+    verticalMovement.setRule(["Normal", "Normal", "Far"], "Fast reduce");
+    verticalMovement.setRule(["Normal", "Fast", "Far"],   "Fast reduce");
+    //----------------------------------------------------
+    verticalMovement.setRule(["Far",   "Slow", "Far"], "Fast reduce");
+    verticalMovement.setRule(["Far",   "Normal", "Far"], "Fast reduce");
+    verticalMovement.setRule(["Far",   "Fast", "Far"], "Fast reduce");
 
     //ACCURACY
     verticalMovement.setAccuracy(100);
@@ -82,10 +111,11 @@ function PortCraneFuzzyLogic(){
     this.horizontalMovement = horizontalMovement;
 }
 
-PortCraneFuzzyLogic.prototype.getVerticalMovement = function(distToShip, containerSpeedY){
-    // console.log("speedY: " + containerSpeedY);
-    // console.log("distToShip: " + distToShip);
-    return this.verticalMovement.calc([distToShip, containerSpeedY]);
+PortCraneFuzzyLogic.prototype.getVerticalMovement = function(distToShip, containerSpeedY, parralaX){
+    var x = this.verticalMovement.calc([distToShip, containerSpeedY, Math.abs(parralaX)]);
+    // console.log("(" + distToShip + ", " + containerSpeedY + ", " + parralaX + "): " + x);
+    return x;
+    // return this.verticalMovement.calc([distToShip, containerSpeedY, Math.abs(parralaX)]);
 }
 
 PortCraneFuzzyLogic.prototype.getHorizontalMovement = function(parallax, containerSpeedX){

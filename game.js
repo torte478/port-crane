@@ -189,6 +189,7 @@ var applyWindAndVerticalSpeed = function (data) {
         data.containerSpeedY = Math.min(data.containerSpeedY, MAX_CONTAINER_SPEED_Y)
     if (data.containerSpeedY < 0)
         data.containerSpeedY = Math.max(data.containerSpeedY, -MAX_CONTAINER_SPEED_Y)
+    data.containerSpeedY = Math.max(0, data.containerSpeedY)
 }
 
 var doMove = function (data) {
@@ -247,21 +248,35 @@ GameStates.Game.prototype = {
         this.target.x = data.targetX + containerWidth / 2
         this.target.y = data.targetY
 
-        for (i = 0; i < data.containers.length; ++i) {
+        for (var i = 0; i < data.containers.length; ++i) {
             this.containers[i].x = data.containers[i].x
             this.containers[i].y = data.containers[i].y
             this.containers[i].visible = true
         }
+        
+        var g = this.ropeGraphics;
 
-        this.ropeGraphics.clear()
+        g.clear()
         if (!isComplete) {
-            this.ropeGraphics.lineStyle(4, 0x333333);
-            this.ropeGraphics.moveTo(data.hoistX, data.hoistY);
-            var cx = data.containers[data.containers.length - 1].x
-            var cy = data.containers[data.containers.length - 1].y
-            this.ropeGraphics.lineTo(cx, cy);
-            this.ropeGraphics.moveTo(data.hoistX + containerWidth, 100);
-            this.ropeGraphics.lineTo(cx + containerWidth, cy);
+            var rw = 4, leftRopeX = data.hoistX + 25, topRopeY = data.hoistY + 9,
+                cx = data.containers[data.containers.length - 1].x,
+                cy = data.containers[data.containers.length - 1].y;
+
+            g.lineStyle(rw, 0x333333, 1);
+
+            // left & right ropes
+            g.moveTo(leftRopeX + rw / 2, topRopeY);
+            g.lineTo(cx + rw / 2, cy);
+
+            g.moveTo(leftRopeX + containerWidth - rw / 2, topRopeY);
+            g.lineTo(cx + containerWidth - rw / 2, cy);
+
+            // circles near to box
+            g.lineStyle(0);
+            g.beginFill(0xFFFF0B, 0.5);
+            g.drawCircle(cx + rw / 2, cy, 6);
+            g.drawCircle(cx + containerWidth - rw / 2, cy, 6);
+            g.endFill();
         }
     },
 

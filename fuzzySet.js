@@ -315,7 +315,7 @@ FuzzyLogicSystem.prototype.calc = function(inputValue)
                         if (this.ruleMapping[key] == 0)
                             continue;
 
-                        var grade = Math.max(
+                        var grade = Math.min(
                             this.inputSystem[0][firstKey].getMembershipGrade(inputValue[0]),
                             this.inputSystem[1][secondKey].getMembershipGrade(inputValue[1]),
                             this.inputSystem[2][thirdKey].getMembershipGrade(inputValue[2])
