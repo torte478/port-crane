@@ -75,7 +75,7 @@ var getMaxSpeedX = function () {
 
 var isComplete = false
 
-var SUCCESS_DISTANCE = 2
+var SUCCESS_DISTANCE = 1
 var TARGET_X = 100
 var COUNT_SUCCESS = 0
 var NEED_SUCCESS = 25
@@ -97,7 +97,7 @@ var getData = function () {
     oldData.deckHeight = 500 + Math.sin(currentTime) * wavesK
     currentTime += CHANGE_TIME
 
-    if (Math.abs(oldData.containers[oldData.containers.length - 1].y + game.cache.getImage('container').height  +
+    if (-(oldData.containers[oldData.containers.length - 1].y + game.cache.getImage('container').height  +
             (Math.floor((oldData.containers.length - 1) / 5) * game.cache.getImage('container').height) - oldData.deckHeight) <= SUCCESS_DISTANCE) {
         ++COUNT_SUCCESS
         if (COUNT_SUCCESS == NEED_SUCCESS) {
