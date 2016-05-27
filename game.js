@@ -106,8 +106,11 @@ var getData = function () {
         if (COUNT_SUCCESS == NEED_SUCCESS) {
             isComplete = true
         } else {
-            oldData.containers.push(new Container(oldData.containers.last().x, 120))
+            oldData.containers.push(new Container(oldData.hoistX, 120))
             TARGET_X = 100 + 125 * ((oldData.containers.length - 1) % 5)
+            if (oldData.containers.length > 5) {
+                TARGET_X = oldData.containers[oldData.containers.length - 5].x
+            }
         }
     }
 
