@@ -53,14 +53,14 @@ function PortCraneFuzzyLogic(){
     horizontalMovement.addInputSet(0, "No chng", new FuzzyNumber(-2, 0, 2));
     horizontalMovement.addInputSet(0, "To right", new FuzzyInterval(1, 2, 1000, 1000));
     //Horizontal speed
-    horizontalMovement.addInputSet(1, "Move left", new FuzzyInterval(-1, -1, -0.2, -0.1));
-    horizontalMovement.addInputSet(1, "No move", new FuzzyNumber(-0.2, 0, 0.2));
-    horizontalMovement.addInputSet(1, "Move right", new FuzzyInterval(0.1, 0.2, 1, 1));
+    horizontalMovement.addInputSet(1, "Move left", new FuzzyInterval(-1, -1, -0.6, -0.3));
+    horizontalMovement.addInputSet(1, "No move", new FuzzyNumber(-0.5, 0, 0.5));
+    horizontalMovement.addInputSet(1, "Move right", new FuzzyInterval(0.3, 0.6, 1, 1));
 
     //OUTPUT PARAMETERS
-    horizontalMovement.addOutputSet("Move left", new FuzzyInterval(-1, -1, -0.2, 0));
-    horizontalMovement.addOutputSet("Nothing", new FuzzyNumber(-0.2, 0, 0.2));
-    horizontalMovement.addOutputSet("Move right", new FuzzyInterval(0, 0.2, 1, 1));
+    horizontalMovement.addOutputSet("Move left", new FuzzyInterval(-1, -1, -0.5, 0));
+    horizontalMovement.addOutputSet("Nothing", new FuzzyNumber(-0.5, 0, 0.5));
+    horizontalMovement.addOutputSet("Move right", new FuzzyInterval(0, 0.5, 1, 1));
 
     //RULES
     //==========================Parallax====Speed=========
