@@ -189,6 +189,11 @@ GameStates.Game.prototype = {
 
         this.ropeGraphics = game.add.graphics(0, 0);
 
+        this.target = game.add.sprite(0, 0, 'target')
+        this.target.anchor.x = 0.5
+        this.target.anchor.y = 1.0
+
+
         var maxContainers = 16
         this.containers = []
         for (i = 0; i < maxContainers; ++i) {
@@ -210,6 +215,8 @@ GameStates.Game.prototype = {
 
         this.hoist.x = data.hoistX
         this.deck.y = data.deckHeight
+        this.target.x = TARGET_X
+        this.target.y = data.deckHeight
 
         for (i = 0; i < data.containers.length; ++i) {
             this.containers[i].x = data.containers[i].x

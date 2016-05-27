@@ -13,6 +13,7 @@ GameStates.Preloader.prototype = {
         this.load.image('rails', 'assets/crane_top.png');
         this.load.image('hoist', 'assets/hoist.png');
         this.load.image('deck', 'assets/deck.png');
+        this.load.image('target', 'assets/target.png');
         this.load.image('bg', 'assets/sky.png');
     },
 
