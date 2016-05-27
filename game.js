@@ -82,7 +82,7 @@ var MAX_WIND_CHANGE_SPEED = 0.1
 
 var minimapClick = function (z, x) {
     return function() {
-        if (isComplete) {
+        if (isComplete && (countContainersOnSlot[z][x] < 7)) {
             this.targetSlotX = x
             this.targetSlotZ = z
             isComplete = false
