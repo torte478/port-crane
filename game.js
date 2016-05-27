@@ -32,6 +32,9 @@ var oldData = null
 var MAX_CONTAINER_SPEED_Y = 4
 var MAX_CHANGE_SPEED = 0.5
 var MAX_HOIST_SPEED_X = 1
+var currentTime = 0
+var CHANGE_TIME = 0.01
+var wavesK = 25
 
 var getData = function () {
     var res = null
@@ -46,6 +49,9 @@ var getData = function () {
             0.1, 0,
             0, 0)
     }
+
+    oldData.deckHeight = 500 + Math.sin(currentTime) * wavesK
+    currentTime += CHANGE_TIME
 
     {
         oldData.windSpeed = document.querySelector('[name=windspeed]').value / 150.0
