@@ -70,8 +70,9 @@ var isComplete = true
 var SUCCESS_DISTANCE = 1
 var isRunning = false
 
-var minimap = [];
+var minimap;
 var onlanding = function(pos) {
+    console.log(pos, countContainersOnSlot);
     minimap[pos.x][pos.z].setLabel(countContainersOnSlot[pos.z][pos.x].toString());
 }
 
@@ -249,9 +250,10 @@ GameStates.Game.prototype = {
         this.slotsX = 5
         this.slotsZ = 3
         
-        minimap = new Array(this.slotsX).fill([]);
+        minimap = [];
 
         for (var i = 0; i < this.slotsX; ++i) {
+            var col = [];
             for (var j = 0; j < this.slotsZ; ++j) {
                 var x = 600 + i * 32
                 var y = 32 + j * 32
@@ -260,8 +262,10 @@ GameStates.Game.prototype = {
                 // var b = game.add.sprite(x, y, 'square')
                 // b.inputEnabled = true;
                 // b.events.onInputDown.add(minimapClick(j, i), this);
-                minimap[i].push(b);
+                col.push(b);
             }
+            
+            minimap.push(col);
         }
 
         var maxContainers = 50
