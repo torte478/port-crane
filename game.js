@@ -210,7 +210,7 @@ GameStates.Game.prototype = {
         this.target.anchor.y = 1.0
 
 
-        var maxContainers = 16
+        var maxContainers = 50
         this.containers = []
         for (i = 0; i < maxContainers; ++i) {
             var newSprite = this.add.sprite(-1000, -1000, 'container')
