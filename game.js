@@ -55,8 +55,11 @@ var MAX_WIND_CHANGE_SPEED = 0.1
 
 var minimapClick = function (z, x) {
     return function() {
-        this.targetSlotX = x
-        this.targetSlotZ = z
+        if (isComplete) {
+            this.targetSlotX = x
+            this.targetSlotZ = z
+            isComplete = false
+        }
     }
 }
 
@@ -211,6 +214,19 @@ GameStates.Game.prototype = {
         this.target.anchor.x = 0.5
         this.target.anchor.y = 1.0
 
+        // create minimap
+        this.slotsX = 5
+        this.slotsZ = 3
+        for (var i = 0; i < this.slotsX; ++i) {
+            for (var j = 0; j < this.slotsZ; ++j) {
+                var x = 600 + i * 32
+                var y = 32 + j * 32 
+                var b = game.add.sprite(x, y, 'square')
+                b.inputEnabled = true;
+                b.events.onInputDown.add(minimapClick(j, i), this);    
+
+            }
+        }
 
         var maxContainers = 50
         this.containers = []
@@ -222,48 +238,34 @@ GameStates.Game.prototype = {
     },
 
     update: function () {
-        updateWindSpeed()
-        var data = getData(this.targetSlotX, this.targetSlotZ)
 
-        var trunc = function (s) {
-            return String(s).substring(0, 6)
-        }
-
-        var s = "deckHeight: " + trunc(data.deckHeight) +
-            " hoistX: " + trunc(data.hoistX)
-
-        var cw = this.cache.getImage('container').width
-
-        this.hoist.x = data.hoistX
-        this.deck.y = data.deckHeight
-        this.target.x = data.targetX + cw / 2
-        this.target.y = data.targetY
-
-        // create minimap
-        var slotsX = 5
-        var slotsZ = 3
-        for (var i = 0; i < slotsX; ++i) {
-            for (var j = 0; j < slotsZ; ++j) {
-                var x = 600 + i * 32
-                var y = 32 + j * 32 
-                var b = game.add.sprite(x, y, 'square')
-                b.inputEnabled = true;
-
-                b.events.onInputDown.add(minimapClick(j, i), this);        
-            }
-        }
-
-
-        for (var i = 0; i < data.containers.length; ++i) {
-            this.containers[i].x = data.containers[i].x
-            this.containers[i].y = data.containers[i].y
-            this.containers[i].visible = true
-        }
-        
-        var g = this.ropeGraphics;
-        g.clear()
-        
         if (!isComplete) {
+            updateWindSpeed()  
+            var data = getData(this.targetSlotX, this.targetSlotZ)
+
+
+            var trunc = function (s) {
+                return String(s).substring(0, 6)
+            }
+
+            var cw = this.cache.getImage('container').width
+
+            this.hoist.x = data.hoistX
+            this.deck.y = data.deckHeight
+            this.target.x = data.targetX + cw / 2
+            this.target.y = data.targetY
+
+
+
+            for (var i = 0; i < data.containers.length; ++i) {
+                this.containers[i].x = data.containers[i].x
+                this.containers[i].y = data.containers[i].y
+                this.containers[i].visible = true
+            }
+            
+            var g = this.ropeGraphics;
+            g.clear()
+        
             var rw = 4, leftRopeX = data.hoistX, topRopeY = data.hoistY + 9,
                 cx = data.containers[data.containers.length - 1].x,
                 cy = data.containers[data.containers.length - 1].y;
