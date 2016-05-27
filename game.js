@@ -298,23 +298,19 @@ GameStates.Game.prototype = {
             if (isRunning) {
                 this.target.x = data.targetX + CONTAINER_IMAGE_WIDTH / 2 
                 this.target.y = data.targetY
-                if (this.target.visible != true)
-                    this.target.visible = true
             } else {
-                if (this.target.visible != false)
-                    this.target.visible = false
+                this.target.x = -1000
+                this.target.y = -1000
             }
 
             for (var i  = data.containers.length; i < this.containers.length; ++i) {
                 this.containers[i].x = -1000
                 this.containers[i].y = -1000
-//                this.containers[i].visible = false
             }
 
             for (var i = 0; i < data.containers.length; ++i) {
                 this.containers[i].x = data.containers[i].x
                 this.containers[i].y = data.containers[i].y
-//                this.containers[i].visible = true
             }
 
 
