@@ -249,9 +249,11 @@ GameStates.Game.prototype = {
         var s = "deckHeight: " + trunc(data.deckHeight) +
             " hoistX: " + trunc(data.hoistX)
 
+        var containerWidth = this.cache.getImage('container').width
+
         this.hoist.x = data.hoistX
         this.deck.y = data.deckHeight
-        this.target.x = data.targetX
+        this.target.x = data.targetX + containerWidth / 2
         this.target.y = data.targetY
 
         for (i = 0; i < data.containers.length; ++i) {
@@ -267,7 +269,6 @@ GameStates.Game.prototype = {
             var cx = data.containers[data.containers.length - 1].x
             var cy = data.containers[data.containers.length - 1].y
             this.ropeGraphics.lineTo(cx, cy);
-            var containerWidth = this.cache.getImage('container').width
             this.ropeGraphics.moveTo(data.hoistX + containerWidth, 100);
             this.ropeGraphics.lineTo(cx + containerWidth, cy);
         }
