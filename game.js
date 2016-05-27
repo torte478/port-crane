@@ -1,4 +1,6 @@
-﻿function DataForVisualization(deckHeight,
+﻿Array.prototype.last = function () { return this[this.length - 1]; }
+
+function DataForVisualization(deckHeight,
                               containers,
                               hoistX,
                               hoistY,
@@ -94,29 +96,30 @@ var getData = function () {
             0, 0)
     }
 
+    var containerHeight = game.cache.getImage('container').height
     oldData.deckHeight = 500 + Math.sin(currentTime) * wavesK
     currentTime += CHANGE_TIME
 
-    if (-(oldData.containers[oldData.containers.length - 1].y + game.cache.getImage('container').height  +
-            (Math.floor((oldData.containers.length - 1) / 5) * game.cache.getImage('container').height) - oldData.deckHeight) <= SUCCESS_DISTANCE) {
+    if (-(oldData.containers.last().y + containerHeight  +
+            (Math.floor((oldData.containers.length - 1) / 5) * containerHeight) - oldData.deckHeight) <= SUCCESS_DISTANCE) {
         ++COUNT_SUCCESS
         if (COUNT_SUCCESS == NEED_SUCCESS) {
             isComplete = true
         } else {
-            oldData.containers.push(new Container(oldData.containers[oldData.containers.length - 1].x, 120))
+            oldData.containers.push(new Container(oldData.containers.last().x, 120))
             TARGET_X = 100 + 125 * ((oldData.containers.length - 1) % 5)
         }
     }
 
     for (i = 0; i < oldData.containers.length - 1; ++i) {
-        oldData.containers[i].y = oldData.deckHeight - game.cache.getImage('container').height;
-        oldData.containers[i].y -= game.cache.getImage('container').height * Math.floor(i / 5);
+        oldData.containers[i].y = oldData.deckHeight - containerHeight;
+        oldData.containers[i].y -= containerHeight * Math.floor(i / 5);
     }
 
     if (isComplete) {
         for (i = 0; i < oldData.containers.length; ++i) {
-            oldData.containers[i].y = oldData.deckHeight - game.cache.getImage('container').height;
-            oldData.containers[i].y -= game.cache.getImage('container').height * Math.floor(i / 5);
+            oldData.containers[i].y = oldData.deckHeight - containerHeight;
+            oldData.containers[i].y -= containerHeight * Math.floor(i / 5);
         }
         return oldData
     }
@@ -124,10 +127,10 @@ var getData = function () {
     {
         oldData.windSpeed = global.windSpeed / 150.0
         var aaa = new PortCraneFuzzyLogic()
-        var distX = oldData.containers[oldData.containers.length - 1].x - TARGET_X
+        var distX = oldData.containers.last().x - TARGET_X
         var newSpeedX = aaa.getHorizontalMovement(distX, oldData.containerSpeedX)
-        var dist = Math.abs(oldData.deckHeight - oldData.containers[oldData.containers.length - 1].y - game.cache.getImage('container').height)
-        dist -= game.cache.getImage('container').height * Math.floor((oldData.containers.length - 1) / 5)
+        var dist = Math.abs(oldData.deckHeight - oldData.containers.last().y - containerHeight)
+        dist -= containerHeight * Math.floor((oldData.containers.length - 1) / 5)
         var newSpeedY = aaa.getVerticalMovement(dist, oldData.containerSpeedY)
         newSpeedX *= MAX_HOIST_SPEED_X
         newSpeedY *= MAX_CONTAINER_SPEED_Y
@@ -144,8 +147,7 @@ var getData = function () {
     }
 
     doMove(oldData)
-    res = oldData
-    return res
+    return oldData
 }
 
 var applyWindAndVerticalSpeed = function (data) {
