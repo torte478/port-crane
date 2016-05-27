@@ -99,6 +99,8 @@ var getData = function () {
             0, 0,
             100, 500)
     }
+    
+    wavesK = global.wavesK
 
     var containerHeight = game.cache.getImage('container').height
     oldData.deckHeight = 500 + Math.sin(currentTime) * wavesK
