@@ -274,7 +274,7 @@ GameStates.Game.prototype = {
         this.containers = []
         for (i = 0; i < maxContainers; ++i) {
             var newSprite = this.add.sprite(-1000, -1000, 'container')
-            newSprite.visible = false
+            newSprite.visible = true
             this.containers.push(newSprite)
         }
     },
@@ -298,19 +298,23 @@ GameStates.Game.prototype = {
             if (isRunning) {
                 this.target.x = data.targetX + CONTAINER_IMAGE_WIDTH / 2 
                 this.target.y = data.targetY
-                this.target.visible = true
+                if (this.target.visible != true)
+                    this.target.visible = true
             } else {
-                this.target.visible = false
+                if (this.target.visible != false)
+                    this.target.visible = false
             }
 
-            for (var i  = 0; i < this.containers.length; ++i) {
-                this.containers[i].visible = false
+            for (var i  = data.containers.length; i < this.containers.length; ++i) {
+                this.containers[i].x = -1000
+                this.containers[i].y = -1000
+//                this.containers[i].visible = false
             }
 
             for (var i = 0; i < data.containers.length; ++i) {
                 this.containers[i].x = data.containers[i].x
                 this.containers[i].y = data.containers[i].y
-                this.containers[i].visible = true
+//                this.containers[i].visible = true
             }
 
 
