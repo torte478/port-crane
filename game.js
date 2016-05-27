@@ -10,7 +10,9 @@ function DataForVisualization(deckHeight,
                               containerWeight,
                               windSpeed,
                               changeContainerSpeedY,
-                              changeHoistSpeedX) {
+                              changeHoistSpeedX,
+                              targetX,
+                              targetY) {
     this.deckHeight = deckHeight
     this.containers = containers
     this.hoistX = hoistX
@@ -22,6 +24,8 @@ function DataForVisualization(deckHeight,
     this.windSpeed = windSpeed
     this.changeContainerSpeedY = changeContainerSpeedY
     this.changeHoistSpeedX = changeHoistSpeedX
+    this.targetX = targetX
+    this.targetY = targetY
 }
 
 function Container(x, y) {
@@ -78,7 +82,6 @@ var getMaxSpeedX = function () {
 var isComplete = false
 
 var SUCCESS_DISTANCE = 1
-var TARGET_X = 100
 var COUNT_SUCCESS = 0
 var NEED_SUCCESS = 25
 
@@ -93,7 +96,8 @@ var getData = function () {
             400, 100,
             0, 0, 0,
             0.1, 0,
-            0, 0)
+            0, 0,
+            100, 500)
     }
 
     var containerHeight = game.cache.getImage('container').height
@@ -107,9 +111,9 @@ var getData = function () {
             isComplete = true
         } else {
             oldData.containers.push(new Container(oldData.hoistX, 120))
-            TARGET_X = 100 + 125 * ((oldData.containers.length - 1) % 5)
+            oldData.targetX = 100 + 125 * ((oldData.containers.length - 1) % 5)
             if (oldData.containers.length > 5) {
-                TARGET_X = oldData.containers[oldData.containers.length - 6].x
+                oldData.targetX = oldData.containers[oldData.containers.length - 6].x
             }
         }
     }
@@ -130,7 +134,7 @@ var getData = function () {
     {
         oldData.windSpeed = global.windSpeed / 150.0
         var aaa = new PortCraneFuzzyLogic()
-        var distX = oldData.containers.last().x - TARGET_X
+        var distX = oldData.containers.last().x - oldData.targetX
         var newSpeedX = aaa.getHorizontalMovement(distX, oldData.containerSpeedX)
         var dist = Math.abs(oldData.deckHeight - oldData.containers.last().y - containerHeight)
         dist -= containerHeight * Math.floor((oldData.containers.length - 1) / 5)
@@ -233,10 +237,12 @@ GameStates.Game.prototype = {
         var s = "deckHeight: " + trunc(data.deckHeight) +
             " hoistX: " + trunc(data.hoistX)
 
+        var containerWidth = this.cache.getImage('container').width
+
         this.hoist.x = data.hoistX
         this.deck.y = data.deckHeight
-        this.target.x = TARGET_X
-        this.target.y = data.deckHeight
+        this.target.x = data.targetX + containerWidth / 2
+        this.target.y = data.targetY
 
         for (i = 0; i < data.containers.length; ++i) {
             this.containers[i].x = data.containers[i].x
@@ -251,7 +257,6 @@ GameStates.Game.prototype = {
             var cx = data.containers[data.containers.length - 1].x
             var cy = data.containers[data.containers.length - 1].y
             this.ropeGraphics.lineTo(cx, cy);
-            var containerWidth = this.cache.getImage('container').width
             this.ropeGraphics.moveTo(data.hoistX + containerWidth, 100);
             this.ropeGraphics.lineTo(cx + containerWidth, cy);
         }
