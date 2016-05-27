@@ -1,15 +1,14 @@
-﻿function DataForVisualization(
-    deckHeight,
-    containers,
-    hoistX,
-    hoistY,
-    containerSpeedX,
-    containerSpeedY,
-    hoistSpeedX,
-    containerWeight,
-    windSpeed,
-    changeContainerSpeedY,
-    changeHoistSpeedX) {
+﻿function DataForVisualization(deckHeight,
+                              containers,
+                              hoistX,
+                              hoistY,
+                              containerSpeedX,
+                              containerSpeedY,
+                              hoistSpeedX,
+                              containerWeight,
+                              windSpeed,
+                              changeContainerSpeedY,
+                              changeHoistSpeedX) {
     this.deckHeight = deckHeight
     this.containers = containers
     this.hoistX = hoistX
@@ -38,41 +37,45 @@ var wavesK = 25
 var CONTAINER_WIDTH = 100
 
 // Максимальное расстояние до палубы
-var getMaxDistanceToDeck = function() {
+var getMaxDistanceToDeck = function () {
     return 500 + wavesK - 120
 }
 
 // Расстояние, на котором груз считается установленным
-var getOkDistance = function() {
+var getOkDistance = function () {
     return 2
 }
 
 // Максимальная скорость спуска груза
-var getMaxSpeedY = function() {
+var getMaxSpeedY = function () {
     return MAX_CONTAINER_SPEED_Y
 }
 
 // Максимально возможная скорость стыковки
-var getMaxDockingSpeed = function() {
+var getMaxDockingSpeed = function () {
     return MAX_CONTAINER_SPEED_Y / 4
 }
 
 // Максимальное отклонение от цели в сторону
-var getMaxDeviationFromTarget = function() {
+var getMaxDeviationFromTarget = function () {
     return CONTAINER_WIDTH / 10
 }
 
 // Максимально допустимое отклонение
-var getMaxDeviationFromZero = function() {
+var getMaxDeviationFromZero = function () {
     return 30
 }
 
 // Максимальная скорость по Х
-var getMaxSpeedX = function() {
+var getMaxSpeedX = function () {
     return hyi
 }
 
 // Максимально допустимая скорость по Х для стыковки
+
+var isComplete = false
+
+var SUCCESS_DISTANCE = 2
 
 var getData = function () {
     var res = null
@@ -90,6 +93,18 @@ var getData = function () {
 
     oldData.deckHeight = 500 + Math.sin(currentTime) * wavesK
     currentTime += CHANGE_TIME
+
+    if (Math.abs(oldData.containers[oldData.containers.length - 1].y + game.cache.getImage('container').height - oldData.deckHeight) <= SUCCESS_DISTANCE) {
+        isComplete = true
+    }
+
+    if (isComplete) {
+        for (i = 0; i < oldData.containers.length; ++i) {
+            oldData.containers[i].y = oldData.deckHeight - game.cache.getImage('container').height;
+        }
+        return oldData
+    }
+
 
     {
         oldData.windSpeed = document.querySelector('[name=windspeed]').value / 150.0
@@ -111,7 +126,7 @@ var getData = function () {
         oldData.changeContainerSpeedY = newSpeedY
         oldData.changeHoistSpeedX = newSpeedX
     }
-    
+
     doMove(oldData)
     res = oldData
     return res
@@ -121,7 +136,7 @@ var applyWindAndVerticalSpeed = function (data) {
     var curX = data.containers[data.containers.length - 1].x
     var curY = data.containers[data.containers.length - 1].y
     var distToCabin = Math.sqrt((curX - data.hoistX) * (curX - data.hoistX) +
-                                (curY - data.hoistY) * (curY - data.hoistY))
+        (curY - data.hoistY) * (curY - data.hoistY))
     var sinPhi = Math.abs(curX - data.hoistX) / distToCabin
     var cosPhi = Math.abs(curY - data.hoistY) / distToCabin
     var resultSpeed = data.containerSpeedX
@@ -189,7 +204,7 @@ GameStates.Game.prototype = {
         }
 
         var s = "deckHeight: " + trunc(data.deckHeight) +
-                " hoistX: " + trunc(data.hoistX)
+            " hoistX: " + trunc(data.hoistX)
 
         this.hoist.x = data.hoistX
         this.deck.y = data.deckHeight
@@ -211,5 +226,6 @@ GameStates.Game.prototype = {
         game.debug.text(s, 11, 11)
     },
 
-    render: function () { },
+    render: function () {
+    },
 };
