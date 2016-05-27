@@ -89,11 +89,11 @@ var getData = function () {
     var res = null
     if (oldData == null) {
         var xs = [];
-        xs.push(new Container(400, 120))
+        xs.push(new Container(100, 120))
         oldData = new DataForVisualization(
             500,
             xs,
-            400, 100,
+            100, 100,
             0, 0, 0,
             0.1, 0,
             0, 0,
@@ -114,7 +114,7 @@ var getData = function () {
             isComplete = true
         } else {
             oldData.containers.push(new Container(oldData.hoistX, 120))
-            oldData.targetX = 100 + 125 * ((oldData.containers.length - 1) % 5)
+            oldData.targetX = 100 + 100 * ((oldData.containers.length - 1) % 5)
             if (oldData.containers.length > 5) {
                 oldData.targetX = oldData.containers[oldData.containers.length - 6].x
             }
