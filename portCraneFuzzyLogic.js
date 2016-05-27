@@ -3,55 +3,91 @@
  */
 
 function PortCraneFuzzyLogic(){
+    //=====================
     //VERTICAL MOVEMENT
+    //=====================
     var verticalMovement = new FuzzyLogicSystem();
 
-    verticalMovement.addInputSet("Very close", new FuzzyInterval(0, 0, 2, 5));
-    verticalMovement.addInputSet("Close", new FuzzyInterval(2, 5, 8, 10));
-    verticalMovement.addInputSet("Normal", new FuzzyInterval(7, 10, 15, 20));
-    verticalMovement.addInputSet("Far", new FuzzyInterval(16, 20, 25, 30));
-    verticalMovement.addInputSet("Very far", new FuzzyInterval(25, 30, 50, 50));
+    //INPUT PARAMETERS
+    //Distance to ship
+    verticalMovement.addInputSet(0, "Close", new FuzzyInterval(0, 0, 10, 20));
+    verticalMovement.addInputSet(0, "Normal", new FuzzyInterval(10, 20, 250, 300));
+    verticalMovement.addInputSet(0, "Far", new FuzzyInterval(250, 300, 500, 500));
+    //Vertical speed
+    verticalMovement.addInputSet(1, "Slow", new FuzzyInterval(0, 0, 1, 2));
+    verticalMovement.addInputSet(1, "Normal", new FuzzyNumber(1, 2, 3));
+    verticalMovement.addInputSet(1, "Fast", new FuzzyInterval(2, 3, 4, 4));
 
-    verticalMovement.addOutputSet("Very slow", new FuzzyInterval(0, 0, 1, 2));
-    verticalMovement.addOutputSet("Slow", new FuzzyInterval(1, 2, 3, 4));
-    verticalMovement.addOutputSet("Normal", new FuzzyInterval(3, 4, 5, 6));
-    verticalMovement.addOutputSet("Fast", new FuzzyInterval(5, 6, 7, 8));
-    verticalMovement.addOutputSet("Very fast", new FuzzyInterval(7, 8, 9, 10));
+    //OUTPUT PARAMETERS
+    verticalMovement.addOutputSet("Reduce", new FuzzyInterval(-1, -1, -0.2, 0));
+    verticalMovement.addOutputSet("Nothing", new FuzzyNumber(-0.2, 0, 0.2));
+    verticalMovement.addOutputSet("Increase", new FuzzyInterval(0, 0.2, 1, 1));
 
-    verticalMovement.setRule("Very close", "Very slow");
-    verticalMovement.setRule("Close", "Slow");
-    verticalMovement.setRule("Normal", "Normal");
-    verticalMovement.setRule("Far", "Fast");
-    verticalMovement.setRule("Very far", "Very fast");
+    //RULES
+    //==========Distance to ship ===Vertical speed=====
+    verticalMovement.setRule(["Close", "Slow"], "Nothing");
+    verticalMovement.setRule(["Close", "Normal"], "Reduce");
+    verticalMovement.setRule(["Close", "Fast"], "Reduce");
+    //----------------------------------------------------
+    verticalMovement.setRule(["Normal", "Slow"], "Increase");
+    verticalMovement.setRule(["Normal", "Normal"], "Nothing");
+    verticalMovement.setRule(["Normal", "Fast"], "Reduce");
+    //----------------------------------------------------
+    verticalMovement.setRule(["Far",   "Slow"], "Increase");
+    verticalMovement.setRule(["Far",   "Normal"], "Increase");
+    verticalMovement.setRule(["Far",   "Fast"], "Nothing");
 
-    verticalMovement.setAccuracy(1000);
+    //ACCURACY
+    verticalMovement.setAccuracy(100);
 
     this.verticalMovement = verticalMovement;
 
+    //=====================
     //HORIZONTAL MOVEMENT
+    //=====================
     var horizontalMovement = new FuzzyLogicSystem();
 
-    horizontalMovement.addInputSet("Left", new FuzzyInterval(-20, -20, -10, -5));
-    horizontalMovement.addInputSet("Center", new FuzzyInterval(-10, -5, 5, 10));
-    horizontalMovement.addInputSet("Right", new FuzzyInterval(5, 10, 20, 20));
+    //INPUT PARAMETERS
+    //parallax
+    horizontalMovement.addInputSet(0, "To left", new FuzzyInterval(-400, -400, -2, -1));
+    horizontalMovement.addInputSet(0, "No chng", new FuzzyNumber(-2, 0, 2));
+    horizontalMovement.addInputSet(0, "To right", new FuzzyInterval(1, 2, 400, 400));
+    //Horizontal speed
+    horizontalMovement.addInputSet(1, "Move left", new FuzzyInterval(-5, -5, -2, -1));
+    horizontalMovement.addInputSet(1, "No move", new FuzzyNumber(-2, 0, 2));
+    horizontalMovement.addInputSet(1, "Move right", new FuzzyInterval(1, 2, 5, 5));
 
-    horizontalMovement.addOutputSet("Move left", new FuzzyInterval(-10, -10, -5, -2));
-    horizontalMovement.addOutputSet("Don't move", new FuzzyInterval(-5, -2, 2, 5));
-    horizontalMovement.addOutputSet("Move right", new FuzzyInterval(2, 5, 10, 10));
+    //OUTPUT PARAMETERS
+    horizontalMovement.addOutputSet("Move left", new FuzzyInterval(-1, -1, -0.2, 0));
+    horizontalMovement.addOutputSet("Nothing", new FuzzyNumber(-0.2, 0, 0.2));
+    horizontalMovement.addOutputSet("Move right", new FuzzyInterval(0, 0.2, 1, 1));
 
-    horizontalMovement.setRule("Left", "Move right");
-    horizontalMovement.setRule("Center", "Don't move");
-    horizontalMovement.setRule("Right", "Move left");
+    //RULES
+    //==========================Parallax====Speed=========
+    horizontalMovement.setRule(["To left" , "Move left" ], "Move right");
+    horizontalMovement.setRule(["To left" , "No move"   ], "Move right");
+    horizontalMovement.setRule(["To left" , "Move right"], "Nothing");
+    //==========================Parallax====Speed=========
+    horizontalMovement.setRule(["No chng" , "Move left" ], "Move right");
+    horizontalMovement.setRule(["No chng" , "No move"   ], "Nothing");
+    horizontalMovement.setRule(["No chng" , "Move right"], "Move left");
+    //==========================Parallax====Speed========
+    horizontalMovement.setRule(["To right", "Move left" ], "Nothing");
+    horizontalMovement.setRule(["To right", "No move"   ], "Move left");
+    horizontalMovement.setRule(["To right", "Move right"], "Move left");
 
+    //ACCURACY
     horizontalMovement.setAccuracy(100);
 
     this.horizontalMovement = horizontalMovement;
 }
 
-PortCraneFuzzyLogic.prototype.getVerticalMovement = function(distToShip, currentSpeedY){
-    return 1;//this.verticalMovement.calc(distToShip);
+PortCraneFuzzyLogic.prototype.getVerticalMovement = function(distToShip, containerSpeedY){
+    // console.log("speedY: " + containerSpeedY);
+    return this.verticalMovement.calc([distToShip, containerSpeedY]);
 }
 
-PortCraneFuzzyLogic.prototype.getHorizontalMovement = function(wind, containerSpeedX, cabinSpeedX){
-    return 0;//this.horizontalMovement.calc(windDeviation);
+PortCraneFuzzyLogic.prototype.getHorizontalMovement = function(parallax, containerSpeedX){
+    // console.log("parallax: " + parallax);
+    return this.horizontalMovement.calc([parallax, containerSpeedX]);
 }
