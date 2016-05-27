@@ -98,7 +98,7 @@ var getData = function () {
     currentTime += CHANGE_TIME
 
     if (Math.abs(oldData.containers[oldData.containers.length - 1].y + game.cache.getImage('container').height  +
-            (Math.floor((oldData.containers.length - 1) / 5) ? game.cache.getImage('container').height : 0) - oldData.deckHeight) <= SUCCESS_DISTANCE) {
+            (Math.floor((oldData.containers.length) / 5) * game.cache.getImage('container').height) - oldData.deckHeight) <= SUCCESS_DISTANCE) {
         ++COUNT_SUCCESS
         if (COUNT_SUCCESS == NEED_SUCCESS) {
             isComplete = true
