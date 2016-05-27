@@ -51,10 +51,21 @@ var isComplete = false
 var SUCCESS_DISTANCE = 1
 var isRunning = false
 
+var MAX_WIND_CHANGE_SPEED = 0.1
+
+var minimapClick = function (z) {
+    return function (x) {
+        return function() {
+            this.targetSlotX = x
+            this.targetSlotZ = z
+        }
+    }
+}
+
 var getData = function (targetSlotX, targetSlotZ) {
     if (arrayOldData[targetSlotZ] == null) {
         var xs = [];
-        arrayOldData = new DataForVisualization(
+        arrayOldData[targetSlotZ] = new DataForVisualization(
             500,
             xs,
             100, 100,
@@ -162,6 +173,16 @@ var doMove = function (data) {
     data.containers[data.containers.length - 1].x += data.containerSpeedX + data.hoistSpeedX * 0.7;
 }
 
+var updateWindSpeed = function() {
+    if (global.windSpeed < global.windSpeedSlider) {
+        global.windSpeed = Math.min(global.windSpeed + MAX_WIND_CHANGE_SPEED,
+                                    global.windSpeedSlider)
+    } else if (global.windSpeed > global.windSpeedSlider) {
+        global.windSpeed = Math.max(global.windSpeed - MAX_WIND_CHANGE_SPEED,
+                                    global.windSpeedSlider)
+    }
+}
+
 GameStates.Game = function (game) {
 
 };
@@ -195,7 +216,9 @@ GameStates.Game.prototype = {
     },
 
     update: function () {
-        var data = getData()
+        updateWindSpeed()
+        var data = getData(this.targetSlotX, this.targetSlotZ)
+
 
         var trunc = function (s) {
             return String(s).substring(0, 6)
@@ -211,15 +234,34 @@ GameStates.Game.prototype = {
         this.target.x = data.targetX + cw / 2
         this.target.y = data.targetY
 
+        this.targetSlotX = 0
+        this.targetSlotZ = 0
+
+        // create minimap
+        var slotsX = 5
+        var slotsZ = 3
+        for (var i = 0; i < slotsX; ++i) {
+            for (var j = 0; j < slotsZ; ++j) {
+                var x = 600 + i * 32
+                var y = 32 + j * 32 
+                this.button = game.add.button(x, y, 
+                                              'square', 
+                                              minimapClick(j)(i), 
+                                              this);
+                
+            }
+        }
+
+
         for (var i = 0; i < data.containers.length; ++i) {
             this.containers[i].x = data.containers[i].x
             this.containers[i].y = data.containers[i].y
             this.containers[i].visible = true
         }
-
+        
         var g = this.ropeGraphics;
         g.clear()
-
+        
         if (!isComplete) {
             var rw = 4, leftRopeX = data.hoistX, topRopeY = data.hoistY + 9,
                 cx = data.containers[data.containers.length - 1].x,
@@ -241,6 +283,7 @@ GameStates.Game.prototype = {
             g.drawCircle(cw + cx - rw / 2, cy, 6);
             g.endFill();
         }
+        game.debug.text('wind: ' + global.windSpeed, 11, 11)
     },
 
     render: function () {

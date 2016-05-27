@@ -70,10 +70,10 @@
 </html>
 
 <script>
-    var global = { windSpeed: 0, wavesK: 25 };
+    var global = { windSpeedSlider: 0, wavesK: 25, windSpeed: 0 };
 
     document.querySelector('#wind').onmousemove = function (e) {
-        global.windSpeed = e.target.value;
+        global.windSpeedSlider = e.target.value;
     }
     
     document.querySelector('#stepa').oninput = function (e) {
