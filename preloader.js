@@ -19,6 +19,6 @@ GameStates.Preloader.prototype = {
 
     create: function () {
         //call next state
-        this.state.start('Game');
+        this.state.start('MainMenu');
     }
 };
