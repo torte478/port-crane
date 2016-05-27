@@ -41,46 +41,7 @@ var currentTime = 0
 var CHANGE_TIME = 0.01
 var wavesK = 25
 var CONTAINER_WIDTH = 100
-
-// Максимальное расстояние до палубы
-var getMaxDistanceToDeck = function () {
-    return 500 + wavesK - 120
-}
-
-// Расстояние, на котором груз считается установленным
-var getOkDistance = function () {
-    return 2
-}
-
-// Максимальная скорость спуска груза
-var getMaxSpeedY = function () {
-    return MAX_CONTAINER_SPEED_Y
-}
-
-// Максимально возможная скорость стыковки
-var getMaxDockingSpeed = function () {
-    return MAX_CONTAINER_SPEED_Y / 4
-}
-
-// Максимальное отклонение от цели в сторону
-var getMaxDeviationFromTarget = function () {
-    return CONTAINER_WIDTH / 10
-}
-
-// Максимально допустимое отклонение
-var getMaxDeviationFromZero = function () {
-    return 30
-}
-
-// Максимальная скорость по Х
-var getMaxSpeedX = function () {
-    return hyi
-}
-
-// Максимально допустимая скорость по Х для стыковки
-
 var isComplete = false
-
 var SUCCESS_DISTANCE = 1
 var COUNT_SUCCESS = 0
 var NEED_SUCCESS = 25
@@ -242,11 +203,11 @@ GameStates.Game.prototype = {
         var s = "deckHeight: " + trunc(data.deckHeight) +
             " hoistX: " + trunc(data.hoistX)
 
-        var containerWidth = this.cache.getImage('container').width
+        var cw = this.cache.getImage('container').width
 
         this.hoist.x = data.hoistX
         this.deck.y = data.deckHeight
-        this.target.x = data.targetX + containerWidth / 2
+        this.target.x = data.targetX + cw / 2
         this.target.y = data.targetY
 
         for (var i = 0; i < data.containers.length; ++i) {
@@ -256,8 +217,8 @@ GameStates.Game.prototype = {
         }
         
         var g = this.ropeGraphics;
-
         g.clear()
+        
         if (!isComplete) {
             var rw = 4, leftRopeX = data.hoistX, topRopeY = data.hoistY + 9,
                 cx = data.containers[data.containers.length - 1].x,
@@ -269,14 +230,14 @@ GameStates.Game.prototype = {
             g.moveTo(rw / 2 + leftRopeX, topRopeY);
             g.lineTo(rw / 2 + cx, cy);
 
-            g.moveTo(containerWidth - rw / 2 + leftRopeX, topRopeY);
-            g.lineTo(containerWidth - rw / 2 + cx, cy);
+            g.moveTo(cw - rw / 2 + leftRopeX, topRopeY);
+            g.lineTo(cw - rw / 2 + cx, cy);
 
             // circles near to box
             g.lineStyle(0);
             g.beginFill(0xFFFF0B, 0.5);
             g.drawCircle(cx + rw / 2, cy, 6);
-            g.drawCircle(containerWidth + cx - rw / 2, cy, 6);
+            g.drawCircle(cw + cx - rw / 2, cy, 6);
             g.endFill();
         }
     },
