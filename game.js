@@ -28,6 +28,7 @@ function DataForVisualization(deckHeight,
     this.changeHoistSpeedX = changeHoistSpeedX
     this.targetX = targetX
     this.targetY = targetY
+    this.magicOutput = 100
 }
 
 function Container(x, y, slotXId, slotYId) {
@@ -76,6 +77,7 @@ var getData = function (targetSlotX, targetSlotZ) {
             100, 500)
     }
     oldData = arrayOldData[targetSlotZ]
+    oldData.magicOutput = targetSlotX
 
     if (targetSlotX >= 5) {
         return oldData
@@ -98,6 +100,7 @@ var getData = function (targetSlotX, targetSlotZ) {
         (countContainersOnSlot[targetSlotZ][targetSlotX] * containerHeight) - oldData.deckHeight) <= SUCCESS_DISTANCE) {
         isComplete = true
         isRunning = false
+        oldData.magicOutput = 100
         countContainersOnSlot[targetSlotZ][targetSlotX]++;
     }
     oldData.targetY = oldData.deckHeight - countContainersOnSlot[targetSlotZ][targetSlotX] * containerHeight
@@ -241,10 +244,10 @@ GameStates.Game.prototype = {
         var g = this.ropeGraphics;
         g.clear()
 
-        if (!isComplete) {
+        {
             updateWindSpeed()  
             var data = getData(this.targetSlotX, this.targetSlotZ)
-
+            this.targetSlotX = data.magicOutput
 
             var trunc = function (s) {
                 return String(s).substring(0, 6)
@@ -265,26 +268,28 @@ GameStates.Game.prototype = {
                 this.containers[i].visible = true
             }
             
-        
-            var rw = 4, leftRopeX = data.hoistX, topRopeY = data.hoistY + 9,
-                cx = data.containers[data.containers.length - 1].x,
-                cy = data.containers[data.containers.length - 1].y;
 
-            g.lineStyle(rw, 0x333333, 1);
+            if (isRunning) {
+                var rw = 4, leftRopeX = data.hoistX, topRopeY = data.hoistY + 9,
+                    cx = data.containers[data.containers.length - 1].x,
+                    cy = data.containers[data.containers.length - 1].y;
 
-            // left & right ropes
-            g.moveTo(rw / 2 + leftRopeX, topRopeY);
-            g.lineTo(rw / 2 + cx, cy);
+                g.lineStyle(rw, 0x333333, 1);
 
-            g.moveTo(cw - rw / 2 + leftRopeX, topRopeY);
-            g.lineTo(cw - rw / 2 + cx, cy);
+                // left & right ropes
+                g.moveTo(rw / 2 + leftRopeX, topRopeY);
+                g.lineTo(rw / 2 + cx, cy);
 
-            // circles near to box
-            g.lineStyle(0);
-            g.beginFill(0xFFFF0B, 0.5);
-            g.drawCircle(cx + rw / 2, cy, 6);
-            g.drawCircle(cw + cx - rw / 2, cy, 6);
-            g.endFill();
+                g.moveTo(cw - rw / 2 + leftRopeX, topRopeY);
+                g.lineTo(cw - rw / 2 + cx, cy);
+
+                // circles near to box
+                g.lineStyle(0);
+                g.beginFill(0xFFFF0B, 0.5);
+                g.drawCircle(cx + rw / 2, cy, 6);
+                g.drawCircle(cw + cx - rw / 2, cy, 6);
+                g.endFill();
+            }
         }
         game.debug.text('wind: ' + global.windSpeed, 11, 11)
     },
