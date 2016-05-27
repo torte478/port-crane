@@ -47,7 +47,7 @@ var currentTime = Math.random() * 10
 var CHANGE_TIME = 0.01
 var wavesK = 25
 var CONTAINER_WIDTH = 100
-var isComplete = false
+var isComplete = true
 var SUCCESS_DISTANCE = 1
 var isRunning = false
 
@@ -76,10 +76,15 @@ var getData = function (targetSlotX, targetSlotZ) {
         oldData = arrayOldData[targetSlotZ]
     }
 
+    if (targetSlotX >= 5) {
+        return oldData
+    }
+
     if (isRunning == false) {
         oldData.targetX = 100 + 100 * targetSlotX
         oldData.containers.push(new Container(oldData.hoistX, 120, targetSlotX, countContainersOnSlot[targetSlotZ][targetSlotX]))
         isRunning = true
+        isComplete = false
     }
 
     wavesK = global.wavesK
@@ -198,6 +203,9 @@ GameStates.Game.prototype = {
         this.hoist.anchor.y = 0.7
         this.hoist.anchor.x = 0.295
         this.rails.anchor.y = 0.1
+
+        this.targetSlotX = 100
+        this.targetSlotZ = 0
 
         this.ropeGraphics = game.add.graphics(0, 0);
 
