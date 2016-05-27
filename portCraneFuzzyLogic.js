@@ -19,9 +19,9 @@ function PortCraneFuzzyLogic(){
     verticalMovement.addInputSet(1, "Fast", new FuzzyInterval(2, 3, 4, 4));
 
     //OUTPUT PARAMETERS
-    verticalMovement.addOutputSet("Reduce", new FuzzyInterval(-0.005, -0.005, -0.002, 0));
-    verticalMovement.addOutputSet("Nothing", new FuzzyNumber(-0.002, 0, 0.002));
-    verticalMovement.addOutputSet("Increase", new FuzzyInterval(0, 0.002, 0.005, 0.005));
+    verticalMovement.addOutputSet("Reduce", new FuzzyInterval(-0.005, -0.005, -0.0005, 0));
+    verticalMovement.addOutputSet("Nothing", new FuzzyNumber(-0.0005, 0, 0.0005));
+    verticalMovement.addOutputSet("Increase", new FuzzyInterval(0, 0.0005, 0.002, 0.002));
 
     //RULES
     //==========Distance to ship ===Vertical speed=====
