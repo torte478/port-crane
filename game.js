@@ -189,6 +189,7 @@ var applyWindAndVerticalSpeed = function (data) {
         data.containerSpeedY = Math.min(data.containerSpeedY, MAX_CONTAINER_SPEED_Y)
     if (data.containerSpeedY < 0)
         data.containerSpeedY = Math.max(data.containerSpeedY, -MAX_CONTAINER_SPEED_Y)
+    data.containerSpeedY = Math.max(0, data.containerSpeedY)
 }
 
 var doMove = function (data) {
