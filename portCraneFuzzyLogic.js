@@ -49,9 +49,9 @@ function PortCraneFuzzyLogic(){
 
     //INPUT PARAMETERS
     //parallax
-    horizontalMovement.addInputSet(0, "To left", new FuzzyInterval(-400, -400, -2, -1));
+    horizontalMovement.addInputSet(0, "To left", new FuzzyInterval(-1000, -1000, -2, -1));
     horizontalMovement.addInputSet(0, "No chng", new FuzzyNumber(-2, 0, 2));
-    horizontalMovement.addInputSet(0, "To right", new FuzzyInterval(1, 2, 400, 400));
+    horizontalMovement.addInputSet(0, "To right", new FuzzyInterval(1, 2, 1000, 1000));
     //Horizontal speed
     horizontalMovement.addInputSet(1, "Move left", new FuzzyInterval(-1, -1, -0.2, -0.1));
     horizontalMovement.addInputSet(1, "No move", new FuzzyNumber(-0.2, 0, 0.2));
