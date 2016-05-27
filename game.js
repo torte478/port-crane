@@ -74,8 +74,8 @@ var getData = function (targetSlotX, targetSlotZ) {
             0.1, 0,
             0, 0,
             100, 500)
-        oldData = arrayOldData[targetSlotZ]
     }
+    oldData = arrayOldData[targetSlotZ]
 
     if (targetSlotX >= 5) {
         return oldData
