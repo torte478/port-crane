@@ -242,7 +242,7 @@ GameStates.Game.prototype = {
 
         this.ropeGraphics.clear()
         if (!isComplete) {
-            this.ropeGraphics.lineStyle(8, 0x333333);
+            this.ropeGraphics.lineStyle(4, 0x333333);
             this.ropeGraphics.moveTo(data.hoistX, data.hoistY);
             this.ropeGraphics.lineTo(data.containers[0].x, data.containers[0].y);
             var containerWidth = this.cache.getImage('container').width
