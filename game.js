@@ -218,14 +218,14 @@ GameStates.Game.prototype = {
         }
 
         this.ropeGraphics.clear()
-        this.ropeGraphics.lineStyle(8, 0x333333);
-        this.ropeGraphics.moveTo(data.hoistX, data.hoistY);
-        this.ropeGraphics.lineTo(data.containers[0].x, data.containers[0].y);
-        var containerWidth = this.cache.getImage('container').width
-        this.ropeGraphics.moveTo(data.hoistX + containerWidth, 100);
-        this.ropeGraphics.lineTo(data.containers[0].x + containerWidth, data.containers[0].y);
-
-        game.debug.text(s, 11, 11)
+        if (!isComplete) {
+            this.ropeGraphics.lineStyle(8, 0x333333);
+            this.ropeGraphics.moveTo(data.hoistX, data.hoistY);
+            this.ropeGraphics.lineTo(data.containers[0].x, data.containers[0].y);
+            var containerWidth = this.cache.getImage('container').width
+            this.ropeGraphics.moveTo(data.hoistX + containerWidth, 100);
+            this.ropeGraphics.lineTo(data.containers[0].x + containerWidth, data.containers[0].y);
+        }
     },
 
     render: function () {
