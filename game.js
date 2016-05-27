@@ -76,6 +76,7 @@ var getMaxSpeedX = function () {
 var isComplete = false
 
 var SUCCESS_DISTANCE = 2
+var TARGET_X = 100
 
 var getData = function () {
     var res = null
@@ -108,7 +109,7 @@ var getData = function () {
     {
         oldData.windSpeed = document.querySelector('[name=windspeed]').value / 150.0
         var aaa = new PortCraneFuzzyLogic()
-        var distX = oldData.containers[oldData.containers.length - 1].x - 350
+        var distX = oldData.containers[oldData.containers.length - 1].x - TARGET_X
         var newSpeedX = aaa.getHorizontalMovement(distX, oldData.containerSpeedX)
         var dist = Math.abs(oldData.deckHeight - oldData.containers[oldData.containers.length - 1].y - game.cache.getImage('container').height)
         var newSpeedY = aaa.getVerticalMovement(dist, oldData.containerSpeedY)
@@ -159,6 +160,8 @@ var applyWindAndVerticalSpeed = function (data) {
         data.containerSpeedY = Math.min(data.containerSpeedY, MAX_CONTAINER_SPEED_Y)
     if (data.containerSpeedY < 0)
         data.containerSpeedY = Math.max(data.containerSpeedY, -MAX_CONTAINER_SPEED_Y)
+    if (Math.abs(data.containers[data.containers.length - 1].x - TARGET_X) > 100)
+        data.containerSpeedY = 0
 }
 
 var doMove = function (data) {
