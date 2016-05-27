@@ -15,6 +15,7 @@ GameStates.Preloader.prototype = {
         this.load.image('deck', 'assets/deck.png');
         this.load.image('target', 'assets/target.png');
         this.load.image('bg', 'assets/sky.png');
+        this.load.image('square', 'assets/square.png');
     },
 
     create: function () {

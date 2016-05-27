@@ -43,6 +43,15 @@ var wavesK = 25
 var CONTAINER_WIDTH = 100
 var MAX_WIND_CHANGE_SPEED = 0.1
 
+var minimapClick = function (z) {
+    return function (x) {
+        return function() {
+            this.targetSlotX = x
+            this.targetSlotZ = z
+        }
+    }
+}
+
 // Максимальное расстояние до палубы
 var getMaxDistanceToDeck = function () {
     return 500 + wavesK - 120
@@ -86,7 +95,7 @@ var SUCCESS_DISTANCE = 1
 var COUNT_SUCCESS = 0
 var NEED_SUCCESS = 25
 
-var getData = function () {
+var getData = function (targetSlotX, targetSlotZ) {
     var res = null
     if (oldData == null) {
         var xs = [];
@@ -245,7 +254,7 @@ GameStates.Game.prototype = {
 
     update: function () {
         updateWindSpeed()
-        var data = getData()
+        var data = getData(this.targetSlotX, this.targetSlotZ)
 
 
         var trunc = function (s) {
@@ -261,6 +270,25 @@ GameStates.Game.prototype = {
         this.deck.y = data.deckHeight
         this.target.x = data.targetX + containerWidth / 2
         this.target.y = data.targetY
+
+        this.targetSlotX = 0
+        this.targetSlotZ = 0
+
+        // create minimap
+        var slotsX = 5
+        var slotsZ = 3
+        for (var i = 0; i < slotsX; ++i) {
+            for (var j = 0; j < slotsZ; ++j) {
+                var x = 600 + i * 32
+                var y = 32 + j * 32 
+                this.button = game.add.button(x, y, 
+                                              'square', 
+                                              minimapClick(j)(i), 
+                                              this);
+                
+            }
+        }
+
 
         for (var i = 0; i < data.containers.length; ++i) {
             this.containers[i].x = data.containers[i].x
