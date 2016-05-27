@@ -80,10 +80,12 @@ var getData = function (targetSlotX, targetSlotZ) {
     oldData.magicOutput = targetSlotX
 
     var containerHeight = game.cache.getImage('container').height
+    wavesK = global.wavesK
     oldData.deckHeight = 500 + Math.sin(currentTime) * wavesK
     currentTime += CHANGE_TIME
 
-    if (targetSlotX >= 5 || countContainersOnSlot[targetSlotZ][targetSlotX] == 4) {
+    if (targetSlotX >= 5) {
+        oldData.magicOutput = 100
         for (i = 0; i < oldData.containers.length; ++i) {
             oldData.containers[i].y = oldData.deckHeight - containerHeight;
             oldData.containers[i].y -= containerHeight * oldData.containers[i].slotYId;
@@ -97,8 +99,6 @@ var getData = function (targetSlotX, targetSlotZ) {
         isRunning = true
         isComplete = false
     }
-
-    wavesK = global.wavesK
 
     if (-(oldData.containers.last().y + containerHeight +
         (countContainersOnSlot[targetSlotZ][targetSlotX] * containerHeight) - oldData.deckHeight) <= SUCCESS_DISTANCE) {
