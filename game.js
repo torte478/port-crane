@@ -66,6 +66,8 @@ var currentTime = Math.random() * 10
 var CHANGE_TIME = 0.01
 var wavesK = 25
 var CONTAINER_WIDTH = 100
+var CONTAINER_IMAGE_WIDTH = 68
+var CONTAINER_IMAGE_HEIGHT = 43
 var isComplete = true
 var SUCCESS_DISTANCE = 1
 var isRunning = false
@@ -103,7 +105,7 @@ var getData = function (targetSlotX, targetSlotZ) {
     oldData = arrayOldData[targetSlotZ]
     oldData.magicOutput = targetSlotX
 
-    var containerHeight = game.cache.getImage('container').height
+    var containerHeight = 43
     wavesK = global.wavesK
     oldData.deckHeight = 500 + Math.sin(currentTime) * wavesK
     currentTime += CHANGE_TIME
@@ -290,12 +292,11 @@ GameStates.Game.prototype = {
                 return String(s).substring(0, 6)
             }
 
-            var cw = this.cache.getImage('container').width
 
             this.hoist.x = data.hoistX
             this.deck.y = data.deckHeight
             if (isRunning) {
-                this.target.x = data.targetX + cw / 2
+                this.target.x = data.targetX + CONTAINER_IMAGE_WIDTH / 2 
                 this.target.y = data.targetY
                 this.target.visible = true
             } else {
@@ -317,7 +318,8 @@ GameStates.Game.prototype = {
             if (isRunning) {
                 var rw = 4, leftRopeX = data.hoistX, topRopeY = data.hoistY + 9,
                     cx = data.containers[data.containers.length - 1].x,
-                    cy = data.containers[data.containers.length - 1].y;
+                    cy = data.containers[data.containers.length - 1].y,
+                    cw = CONTAINER_IMAGE_WIDTH;
 
                 g.lineStyle(rw, 0x333333, 1);
 
