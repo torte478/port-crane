@@ -261,17 +261,25 @@ GameStates.Game.prototype = {
 
             this.hoist.x = data.hoistX
             this.deck.y = data.deckHeight
-            this.target.x = data.targetX + cw / 2
-            this.target.y = data.targetY
+            if (isRunning) {
+                this.target.x = data.targetX + cw / 2
+                this.target.y = data.targetY
+                this.target.visible = true
+            } else {
+                this.target.visible = false
+            }
 
-
+            for (var i  = 0; i < this.containers.length; ++i) {
+                this.containers[i].visible = false
+            }
 
             for (var i = 0; i < data.containers.length; ++i) {
                 this.containers[i].x = data.containers[i].x
                 this.containers[i].y = data.containers[i].y
                 this.containers[i].visible = true
             }
-            
+
+
 
             if (isRunning) {
                 var rw = 4, leftRopeX = data.hoistX, topRopeY = data.hoistY + 9,
