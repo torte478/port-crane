@@ -98,7 +98,7 @@ var getData = function () {
     currentTime += CHANGE_TIME
 
     if (Math.abs(oldData.containers[oldData.containers.length - 1].y + game.cache.getImage('container').height  +
-            (Math.floor((oldData.containers.length - 1) / 5) ? game.cache.getImage('container').height : 0) - oldData.deckHeight) <= SUCCESS_DISTANCE) {
+            (Math.floor((oldData.containers.length - 1) / 5) * game.cache.getImage('container').height) - oldData.deckHeight) <= SUCCESS_DISTANCE) {
         ++COUNT_SUCCESS
         if (COUNT_SUCCESS == NEED_SUCCESS) {
             isComplete = true
@@ -244,10 +244,12 @@ GameStates.Game.prototype = {
         if (!isComplete) {
             this.ropeGraphics.lineStyle(4, 0x333333);
             this.ropeGraphics.moveTo(data.hoistX, data.hoistY);
-            this.ropeGraphics.lineTo(data.containers[0].x, data.containers[0].y);
+            var cx = data.containers[data.containers.length - 1].x
+            var cy = data.containers[data.containers.length - 1].y
+            this.ropeGraphics.lineTo(cx, cy);
             var containerWidth = this.cache.getImage('container').width
             this.ropeGraphics.moveTo(data.hoistX + containerWidth, 100);
-            this.ropeGraphics.lineTo(data.containers[0].x + containerWidth, data.containers[0].y);
+            this.ropeGraphics.lineTo(cx + containerWidth, cy);
         }
     },
 
