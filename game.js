@@ -218,6 +218,7 @@ GameStates.Game.prototype = {
     update: function () {
         updateWindSpeed()
         var data = getData(this.targetSlotX, this.targetSlotZ)
+        console.log('lol ' + this.targetSlotX)
 
 
         var trunc = function (s) {
@@ -233,9 +234,6 @@ GameStates.Game.prototype = {
         this.deck.y = data.deckHeight
         this.target.x = data.targetX + cw / 2
         this.target.y = data.targetY
-
-        this.targetSlotX = 0
-        this.targetSlotZ = 0
 
         // create minimap
         var slotsX = 5
