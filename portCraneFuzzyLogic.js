@@ -49,18 +49,18 @@ function PortCraneFuzzyLogic(){
 
     //INPUT PARAMETERS
     //parallax
-    horizontalMovement.addInputSet(0, "To left", new FuzzyInterval(-5, -5, -2, -1));
+    horizontalMovement.addInputSet(0, "To left", new FuzzyInterval(-400, -400, -2, -1));
     horizontalMovement.addInputSet(0, "No chng", new FuzzyNumber(-2, 0, 2));
-    horizontalMovement.addInputSet(0, "To right", new FuzzyInterval(1, 2, 5, 5));
+    horizontalMovement.addInputSet(0, "To right", new FuzzyInterval(1, 2, 400, 400));
     //Horizontal speed
     horizontalMovement.addInputSet(1, "Move left", new FuzzyInterval(-5, -5, -2, -1));
     horizontalMovement.addInputSet(1, "No move", new FuzzyNumber(-2, 0, 2));
     horizontalMovement.addInputSet(1, "Move right", new FuzzyInterval(1, 2, 5, 5));
 
     //OUTPUT PARAMETERS
-    horizontalMovement.addOutputSet("Move left", new FuzzyInterval(-1, -1, -0.5, 0));
-    horizontalMovement.addOutputSet("Nothing", new FuzzyNumber(-0.5, 0, 0.5));
-    horizontalMovement.addOutputSet("Move right", new FuzzyInterval(0, 0.5, 1, 1));
+    horizontalMovement.addOutputSet("Move left", new FuzzyInterval(-1, -1, -0.2, 0));
+    horizontalMovement.addOutputSet("Nothing", new FuzzyNumber(-0.2, 0, 0.2));
+    horizontalMovement.addOutputSet("Move right", new FuzzyInterval(0, 0.2, 1, 1));
 
     //RULES
     //==========================Parallax====Speed=========
@@ -88,5 +88,6 @@ PortCraneFuzzyLogic.prototype.getVerticalMovement = function(distToShip, contain
 }
 
 PortCraneFuzzyLogic.prototype.getHorizontalMovement = function(parallax, containerSpeedX){
+    // console.log("parallax: " + parallax);
     return this.horizontalMovement.calc([parallax, containerSpeedX]);
 }
