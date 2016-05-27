@@ -31,7 +31,7 @@ function Container(x, y) {
 var oldData = null
 var MAX_CONTAINER_SPEED_Y = 4
 var MAX_CHANGE_SPEED = 0.5
-var MAX_HOIST_SPEED_X = 2
+var MAX_HOIST_SPEED_X = 1
 
 var getData = function () {
     var res = null
@@ -92,7 +92,7 @@ var applyWindAndVerticalSpeed = function (data) {
     data.containerSpeedX = resultSpeed
     data.containerSpeedY += data.changeContainerSpeedY
     data.hoistSpeedX += data.changeHoistSpeedX
-    data.hoistSpeedX *= 0.99
+    data.hoistSpeedX *= 0.9
     if (data.hoistSpeedX > 0)
         data.hoistSpeedX = Math.min(data.hoistSpeedX, MAX_HOIST_SPEED_X)
     if (data.hoistSpeedX < 0)
