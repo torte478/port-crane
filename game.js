@@ -242,11 +242,11 @@ GameStates.Game.prototype = {
         var s = "deckHeight: " + trunc(data.deckHeight) +
             " hoistX: " + trunc(data.hoistX)
 
-        var containerWidth = this.cache.getImage('container').width
+        var cw = this.cache.getImage('container').width
 
         this.hoist.x = data.hoistX
         this.deck.y = data.deckHeight
-        this.target.x = data.targetX + containerWidth / 2
+        this.target.x = data.targetX + cw / 2
         this.target.y = data.targetY
 
         for (var i = 0; i < data.containers.length; ++i) {
@@ -256,8 +256,8 @@ GameStates.Game.prototype = {
         }
         
         var g = this.ropeGraphics;
-
         g.clear()
+        
         if (!isComplete) {
             var rw = 4, leftRopeX = data.hoistX, topRopeY = data.hoistY + 9,
                 cx = data.containers[data.containers.length - 1].x,
@@ -269,14 +269,14 @@ GameStates.Game.prototype = {
             g.moveTo(rw / 2 + leftRopeX, topRopeY);
             g.lineTo(rw / 2 + cx, cy);
 
-            g.moveTo(containerWidth - rw / 2 + leftRopeX, topRopeY);
-            g.lineTo(containerWidth - rw / 2 + cx, cy);
+            g.moveTo(cw - rw / 2 + leftRopeX, topRopeY);
+            g.lineTo(cw - rw / 2 + cx, cy);
 
             // circles near to box
             g.lineStyle(0);
             g.beginFill(0xFFFF0B, 0.5);
             g.drawCircle(cx + rw / 2, cy, 6);
-            g.drawCircle(containerWidth + cx - rw / 2, cy, 6);
+            g.drawCircle(cw + cx - rw / 2, cy, 6);
             g.endFill();
         }
     },
