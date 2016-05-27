@@ -2,6 +2,24 @@
     return this[this.length - 1];
 }
 
+var LabelButton = function (game, x, y, key, label, callback, callbackContext, overFrame, outFrame, downFrame, upFrame) {
+    Phaser.Button.call(this, game, x, y, key, callback, callbackContext, overFrame, 1, 0, 2 /*outFrame, downFrame, upFrame*/);
+    //Style how you wish...  
+    this.style = { 'font': '15px monospace', 'fill': 'black' };
+    this.anchor.setTo(0.5, 0.5);
+    this.label = new Phaser.Text(game, 0, 0, label, this.style);
+    //puts the label in the center of the button    
+    this.label.anchor.setTo(0.5, 0.5);
+    this.addChild(this.label);
+    this.setLabel(label);
+    //adds button to game 
+    game.add.existing(this);
+};
+LabelButton.prototype = Object.create(Phaser.Button.prototype);
+LabelButton.prototype.constructor = LabelButton;
+LabelButton.prototype.setLabel = function (label) { this.label.setText(label);};
+
+
 function DataForVisualization(deckHeight,
                               containers,
                               hoistX,
@@ -51,6 +69,12 @@ var CONTAINER_WIDTH = 100
 var isComplete = true
 var SUCCESS_DISTANCE = 1
 var isRunning = false
+
+var minimap;
+var onlanding = function(pos) {
+    console.log(pos, countContainersOnSlot);
+    minimap[pos.x][pos.z].setLabel(countContainersOnSlot[pos.z][pos.x].toString());
+}
 
 var MAX_WIND_CHANGE_SPEED = 0.1
 
@@ -106,6 +130,7 @@ var getData = function (targetSlotX, targetSlotZ) {
         isRunning = false
         oldData.magicOutput = 100
         countContainersOnSlot[targetSlotZ][targetSlotX]++;
+        onlanding({x: targetSlotX, z: targetSlotZ});
     }
     oldData.targetY = oldData.deckHeight - countContainersOnSlot[targetSlotZ][targetSlotX] * containerHeight
 
@@ -212,7 +237,7 @@ GameStates.Game.prototype = {
         this.hoist.anchor.x = 0.295
         this.rails.anchor.y = 0.1
 
-        this.targetSlotX = 100
+        this.targetSlotX = 100  // won't be updated when > 5
         this.targetSlotZ = 0
 
         this.ropeGraphics = game.add.graphics(0, 0);
@@ -224,15 +249,23 @@ GameStates.Game.prototype = {
         // create minimap
         this.slotsX = 5
         this.slotsZ = 3
+        
+        minimap = [];
+
         for (var i = 0; i < this.slotsX; ++i) {
+            var col = [];
             for (var j = 0; j < this.slotsZ; ++j) {
                 var x = 600 + i * 32
-                var y = 32 + j * 32 
-                var b = game.add.sprite(x, y, 'square')
-                b.inputEnabled = true;
-                b.events.onInputDown.add(minimapClick(j, i), this);    
+                var y = 32 + j * 32
 
+                var b = new LabelButton(game, x, y, 'square', " ", minimapClick(j, i), this);
+                // var b = game.add.sprite(x, y, 'square')
+                // b.inputEnabled = true;
+                // b.events.onInputDown.add(minimapClick(j, i), this);
+                col.push(b);
             }
+            
+            minimap.push(col);
         }
 
         var maxContainers = 50
