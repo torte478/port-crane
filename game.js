@@ -41,6 +41,7 @@ var currentTime = 0
 var CHANGE_TIME = 0.01
 var wavesK = 25
 var CONTAINER_WIDTH = 100
+var MAX_WIND_CHANGE_SPEED = 0.1
 
 // Максимальное расстояние до палубы
 var getMaxDistanceToDeck = function () {
@@ -199,6 +200,16 @@ var doMove = function (data) {
     data.containers[data.containers.length - 1].x += data.containerSpeedX + data.hoistSpeedX * 0.7;
 }
 
+var updateWindSpeed = function() {
+    if (global.windSpeed < global.windSpeedSlider) {
+        global.windSpeed = Math.min(global.windSpeed + MAX_WIND_CHANGE_SPEED,
+                                    global.windSpeedSlider)
+    } else if (global.windSpeed > global.windSpeedSlider) {
+        global.windSpeed = Math.max(global.windSpeed - MAX_WIND_CHANGE_SPEED,
+                                    global.windSpeedSlider)
+    }
+}
+
 GameStates.Game = function (game) {
 
 };
@@ -232,7 +243,9 @@ GameStates.Game.prototype = {
     },
 
     update: function () {
+        updateWindSpeed()
         var data = getData()
+
 
         var trunc = function (s) {
             return String(s).substring(0, 6)
@@ -278,6 +291,7 @@ GameStates.Game.prototype = {
             g.drawCircle(cx + containerWidth - rw / 2, cy, 6);
             g.endFill();
         }
+        game.debug.text('wind: ' + global.windSpeed, 11, 11)
     },
 
     render: function () {
