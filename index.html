@@ -63,16 +63,20 @@
         </div>
         <div>
             <label for="stepa">Показатель Стёпы</label>
-            <input type="number" id="stepa" value="0"/>
+            <input type="number" id="stepa" value="25"/>
         </div>
     </div>
 </body>
 </html>
 
 <script>
-    var global = { windSpeed: 0 };
+    var global = { windSpeed: 0, wavesK: 25 };
 
     document.querySelector('#wind').onmousemove = function (e) {
         global.windSpeed = e.target.value;
+    }
+    
+    document.querySelector('#stepa').oninput = function (e) {
+        global.wavesK = e.target.value;
     }
 </script>
