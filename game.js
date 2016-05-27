@@ -41,46 +41,7 @@ var currentTime = 0
 var CHANGE_TIME = 0.01
 var wavesK = 25
 var CONTAINER_WIDTH = 100
-
-// Максимальное расстояние до палубы
-var getMaxDistanceToDeck = function () {
-    return 500 + wavesK - 120
-}
-
-// Расстояние, на котором груз считается установленным
-var getOkDistance = function () {
-    return 2
-}
-
-// Максимальная скорость спуска груза
-var getMaxSpeedY = function () {
-    return MAX_CONTAINER_SPEED_Y
-}
-
-// Максимально возможная скорость стыковки
-var getMaxDockingSpeed = function () {
-    return MAX_CONTAINER_SPEED_Y / 4
-}
-
-// Максимальное отклонение от цели в сторону
-var getMaxDeviationFromTarget = function () {
-    return CONTAINER_WIDTH / 10
-}
-
-// Максимально допустимое отклонение
-var getMaxDeviationFromZero = function () {
-    return 30
-}
-
-// Максимальная скорость по Х
-var getMaxSpeedX = function () {
-    return hyi
-}
-
-// Максимально допустимая скорость по Х для стыковки
-
 var isComplete = false
-
 var SUCCESS_DISTANCE = 1
 var COUNT_SUCCESS = 0
 var NEED_SUCCESS = 25
