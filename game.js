@@ -53,12 +53,10 @@ var isRunning = false
 
 var MAX_WIND_CHANGE_SPEED = 0.1
 
-var minimapClick = function (z) {
-    return function (x) {
-        return function() {
-            this.targetSlotX = x
-            this.targetSlotZ = z
-        }
+var minimapClick = function (z, x) {
+    return function() {
+        this.targetSlotX = x
+        this.targetSlotZ = z
     }
 }
 
@@ -226,8 +224,6 @@ GameStates.Game.prototype = {
     update: function () {
         updateWindSpeed()
         var data = getData(this.targetSlotX, this.targetSlotZ)
-        console.log('lol ' + this.targetSlotX)
-
 
         var trunc = function (s) {
             return String(s).substring(0, 6)
@@ -250,11 +246,10 @@ GameStates.Game.prototype = {
             for (var j = 0; j < slotsZ; ++j) {
                 var x = 600 + i * 32
                 var y = 32 + j * 32 
-                this.button = game.add.button(x, y, 
-                                              'square', 
-                                              minimapClick(j)(i), 
-                                              this);
-                
+                var b = game.add.sprite(x, y, 'square')
+                b.inputEnabled = true;
+
+                b.events.onInputDown.add(minimapClick(j, i), this);        
             }
         }
 
