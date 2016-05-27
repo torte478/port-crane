@@ -47,6 +47,11 @@
             height: 20px;
             vertical-align: middle;
         }
+        
+        #canvas {
+            min-width: 800px;
+            min-height: 600px;
+        }
     </style>
 </head>
 <body>
@@ -65,7 +70,7 @@
 </html>
 
 <script>
-    var global = { windSpeed: 0};
+    var global = { windSpeed: 0 };
 
     document.querySelector('#wind').onmousemove = function (e) {
         global.windSpeed = e.target.value;

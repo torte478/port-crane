@@ -1,6 +1,7 @@
 ﻿// Boot will take care of initializing a few settings,
 
 // declare the object that will hold all game states
+
 var GameStates = {
     //quite common to add game variables/constants in here
 };
@@ -15,10 +16,7 @@ GameStates.Boot.prototype = {
         this.load.image('preloaderBar', 'assets/preloader-bar.png');
     },
     create: function () {
-        // setup game environment
-        // scale, input etc..
-
-        // call next state
+        this.game.stage.backgroundColor = 0xffffff;
         this.state.start('Preloader');
     }
 };
