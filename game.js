@@ -83,7 +83,7 @@ var getData = function (targetSlotX, targetSlotZ) {
     oldData.deckHeight = 500 + Math.sin(currentTime) * wavesK
     currentTime += CHANGE_TIME
 
-    if (targetSlotX >= 5) {
+    if (targetSlotX >= 5 || countContainersOnSlot[targetSlotZ][targetSlotX] == 4) {
         for (i = 0; i < oldData.containers.length; ++i) {
             oldData.containers[i].y = oldData.deckHeight - containerHeight;
             oldData.containers[i].y -= containerHeight * oldData.containers[i].slotYId;
