@@ -10,8 +10,8 @@ function PortCraneFuzzyLogic(){
 
     //INPUT PARAMETERS
     //Distance to ship
-    verticalMovement.addInputSet(0, "Close", new FuzzyInterval(0, 0, 10, 20));
-    verticalMovement.addInputSet(0, "Normal", new FuzzyInterval(10, 20, 250, 300));
+    verticalMovement.addInputSet(0, "Close", new FuzzyInterval(0, 0, 100, 150));
+    verticalMovement.addInputSet(0, "Normal", new FuzzyInterval(100, 150, 250, 300));
     verticalMovement.addInputSet(0, "Far", new FuzzyInterval(250, 300, 500, 500));
     //Vertical speed
     verticalMovement.addInputSet(1, "Slow", new FuzzyInterval(0, 0, 1, 2));
@@ -84,12 +84,13 @@ function PortCraneFuzzyLogic(){
 
 PortCraneFuzzyLogic.prototype.getVerticalMovement = function(distToShip, containerSpeedY){
     // console.log("speedY: " + containerSpeedY);
+    // console.log("distToShip: " + distToShip);
     return this.verticalMovement.calc([distToShip, containerSpeedY]);
 }
 
 PortCraneFuzzyLogic.prototype.getHorizontalMovement = function(parallax, containerSpeedX){
     // console.log("xSpeed: " + containerSpeedX);
-    console.log("parallax: " + parallax);
+    // console.log("parallax: " + parallax);
     // var x = this.horizontalMovement.calc([parallax, containerSpeedX]);
     // console.log(x);
     // return x;
