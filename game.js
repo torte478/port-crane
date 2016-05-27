@@ -122,7 +122,7 @@ var getData = function () {
     }
 
     {
-        oldData.windSpeed = document.querySelector('[name=windspeed]').value / 150.0
+        oldData.windSpeed = global.windSpeed / 150.0
         var aaa = new PortCraneFuzzyLogic()
         var distX = oldData.containers[oldData.containers.length - 1].x - TARGET_X
         var newSpeedX = aaa.getHorizontalMovement(distX, oldData.containerSpeedX)
@@ -205,6 +205,11 @@ GameStates.Game.prototype = {
 
         this.ropeGraphics = game.add.graphics(0, 0);
 
+        this.target = game.add.sprite(0, 0, 'target')
+        this.target.anchor.x = 0.5
+        this.target.anchor.y = 1.0
+
+
         var maxContainers = 16
         this.containers = []
         for (i = 0; i < maxContainers; ++i) {
@@ -226,6 +231,8 @@ GameStates.Game.prototype = {
 
         this.hoist.x = data.hoistX
         this.deck.y = data.deckHeight
+        this.target.x = TARGET_X
+        this.target.y = data.deckHeight
 
         for (i = 0; i < data.containers.length; ++i) {
             this.containers[i].x = data.containers[i].x
@@ -234,14 +241,14 @@ GameStates.Game.prototype = {
         }
 
         this.ropeGraphics.clear()
-        this.ropeGraphics.lineStyle(8, 0x333333);
-        this.ropeGraphics.moveTo(data.hoistX, data.hoistY);
-        this.ropeGraphics.lineTo(data.containers[0].x, data.containers[0].y);
-        var containerWidth = 100 // todo
-        this.ropeGraphics.moveTo(data.hoistX + containerWidth, 100);
-        this.ropeGraphics.lineTo(data.containers[0].x + containerWidth, data.containers[0].y);
-
-        game.debug.text(s, 11, 11)
+        if (!isComplete) {
+            this.ropeGraphics.lineStyle(8, 0x333333);
+            this.ropeGraphics.moveTo(data.hoistX, data.hoistY);
+            this.ropeGraphics.lineTo(data.containers[0].x, data.containers[0].y);
+            var containerWidth = this.cache.getImage('container').width
+            this.ropeGraphics.moveTo(data.hoistX + containerWidth, 100);
+            this.ropeGraphics.lineTo(data.containers[0].x + containerWidth, data.containers[0].y);
+        }
     },
 
     render: function () {
