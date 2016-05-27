@@ -108,7 +108,7 @@ var getData = function () {
     {
         oldData.windSpeed = document.querySelector('[name=windspeed]').value / 150.0
         var aaa = new PortCraneFuzzyLogic()
-        var distX = oldData.containers[oldData.containers.length - 1].x - 400
+        var distX = oldData.containers[oldData.containers.length - 1].x - 100
         var newSpeedX = aaa.getHorizontalMovement(distX, oldData.containerSpeedX)
         var dist = Math.abs(oldData.deckHeight - oldData.containers[oldData.containers.length - 1].y - game.cache.getImage('container').height)
         var newSpeedY = aaa.getVerticalMovement(dist, oldData.containerSpeedY)
