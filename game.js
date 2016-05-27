@@ -29,7 +29,7 @@ function Container(x, y) {
 
 var oldData = null
 var MAX_CONTAINER_SPEED_Y = 4
-var MAX_CHANGE_SPEED = 0.5
+var MAX_CHANGE_SPEED = 0.1
 var MAX_HOIST_SPEED_X = 1
 var currentTime = 0
 var CHANGE_TIME = 0.01
@@ -104,7 +104,6 @@ var getData = function () {
         }
         return oldData
     }
-
 
     {
         oldData.windSpeed = document.querySelector('[name=windspeed]').value / 150.0
