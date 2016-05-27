@@ -76,6 +76,7 @@ var getMaxSpeedX = function () {
 var isComplete = false
 
 var SUCCESS_DISTANCE = 2
+var TARGET_X = 300
 
 var getData = function () {
     var res = null
