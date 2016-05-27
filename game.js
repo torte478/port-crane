@@ -98,6 +98,7 @@ var getData = function () {
             0.1, 0,
             0, 0,
             100, 500)
+        currentTime = Math.random()*10
     }
     
     wavesK = global.wavesK
