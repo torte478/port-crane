@@ -112,12 +112,12 @@ var getData = function () {
         } else {
             oldData.containers.push(new Container(oldData.hoistX, 120))
             oldData.targetX = 100 + 125 * ((oldData.containers.length - 1) % 5)
-            oldData.targetY = oldData.deckHeight - Math.floor((oldData.containers.length - 1) / 5) * containerHeight
             if (oldData.containers.length > 5) {
                 oldData.targetX = oldData.containers[oldData.containers.length - 6].x
             }
         }
     }
+    oldData.targetY = oldData.deckHeight - Math.floor((oldData.containers.length - 1) / 5) * containerHeight
 
     for (i = 0; i < oldData.containers.length - 1; ++i) {
         oldData.containers[i].y = oldData.deckHeight - containerHeight;
