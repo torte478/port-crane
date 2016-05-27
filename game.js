@@ -140,6 +140,18 @@ var getData = function () {
         var dist = Math.abs(oldData.deckHeight - oldData.containers.last().y - containerHeight)
         dist -= containerHeight * Math.floor((oldData.containers.length - 1) / 5)
         var newSpeedY = aaa.getVerticalMovement(dist, oldData.containerSpeedY)
+
+/*        var kasd = Math.abs(distX) / dist
+        if (kasd > 1) {
+            if (dist < 30 && Math.cos(currentTime) > 0) {
+                newSpeedY = -1
+            } else {
+                if (oldData.containerSpeedY > 0) {
+                    newSpeedY = -0.1
+                }
+            }
+        }
+*/
         newSpeedX *= MAX_HOIST_SPEED_X
         newSpeedY *= MAX_CONTAINER_SPEED_Y
         if (newSpeedX > 0)
@@ -150,11 +162,8 @@ var getData = function () {
             newSpeedY = Math.min(newSpeedY, MAX_CHANGE_SPEED)
         if (newSpeedY < 0)
             newSpeedY = Math.max(newSpeedY, -MAX_CHANGE_SPEED)
-        if (kasd > 0.5)
-            newSpeedY = 0
         oldData.changeContainerSpeedY = newSpeedY
         oldData.changeHoistSpeedX = newSpeedX
-        var kasd = Math.abs(distX) / dist
     }
 
     doMove(oldData)
@@ -189,8 +198,6 @@ var applyWindAndVerticalSpeed = function (data) {
         data.containerSpeedY = Math.min(data.containerSpeedY, MAX_CONTAINER_SPEED_Y)
     if (data.containerSpeedY < 0)
         data.containerSpeedY = Math.max(data.containerSpeedY, -MAX_CONTAINER_SPEED_Y)
-    if (Math.abs(data.containers[data.containers.length - 1].x - TARGET_X) > 100)
-        data.containerSpeedY = 0
 }
 
 var doMove = function (data) {
