@@ -134,19 +134,8 @@ var getData = function () {
         var newSpeedX = aaa.getHorizontalMovement(distX, oldData.containerSpeedX)
         var dist = Math.abs(oldData.deckHeight - oldData.containers.last().y - containerHeight)
         dist -= containerHeight * Math.floor((oldData.containers.length - 1) / 5)
-        var newSpeedY = aaa.getVerticalMovement(dist, oldData.containerSpeedY)
+        var newSpeedY = aaa.getVerticalMovement(dist, oldData.containerSpeedY, distX)
 
-/*        var kasd = Math.abs(distX) / dist
-        if (kasd > 1) {
-            if (dist < 30 && Math.cos(currentTime) > 0) {
-                newSpeedY = -1
-            } else {
-                if (oldData.containerSpeedY > 0) {
-                    newSpeedY = -0.1
-                }
-            }
-        }
-*/
         newSpeedX *= MAX_HOIST_SPEED_X
         newSpeedY *= MAX_CONTAINER_SPEED_Y
         if (newSpeedX > 0)
