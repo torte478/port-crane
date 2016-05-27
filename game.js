@@ -10,7 +10,9 @@ function DataForVisualization(deckHeight,
                               containerWeight,
                               windSpeed,
                               changeContainerSpeedY,
-                              changeHoistSpeedX) {
+                              changeHoistSpeedX,
+                              targetX,
+                              targetY) {
     this.deckHeight = deckHeight
     this.containers = containers
     this.hoistX = hoistX
@@ -22,6 +24,8 @@ function DataForVisualization(deckHeight,
     this.windSpeed = windSpeed
     this.changeContainerSpeedY = changeContainerSpeedY
     this.changeHoistSpeedX = changeHoistSpeedX
+    this.targetX = targetX
+    this.targetY = targetY
 }
 
 function Container(x, y) {
@@ -93,7 +97,8 @@ var getData = function () {
             400, 100,
             0, 0, 0,
             0.1, 0,
-            0, 0)
+            0, 0,
+            265, 265)
     }
 
     var containerHeight = game.cache.getImage('container').height
@@ -239,8 +244,8 @@ GameStates.Game.prototype = {
 
         this.hoist.x = data.hoistX
         this.deck.y = data.deckHeight
-        this.target.x = TARGET_X
-        this.target.y = data.deckHeight
+        this.target.x = data.targetX
+        this.target.y = data.targetY
 
         for (i = 0; i < data.containers.length; ++i) {
             this.containers[i].x = data.containers[i].x
