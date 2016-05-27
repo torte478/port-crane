@@ -37,7 +37,7 @@ function PortCraneFuzzyLogic(){
     verticalMovement.setRule(["Close", "Fast", "Close"],   "Fast reduce");
     //----------------------------------------------------
     verticalMovement.setRule(["Normal", "Very slow", "Close"], "Increase");
-    verticalMovement.setRule(["Normal", "Slow", "Close"],   "Nothing");
+    verticalMovement.setRule(["Normal", "Slow", "Close"],   "Increase");
     verticalMovement.setRule(["Normal", "Normal", "Close"], "Reduce");
     verticalMovement.setRule(["Normal", "Fast", "Close"],   "Fast reduce");
     //----------------------------------------------------

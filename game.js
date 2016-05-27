@@ -213,7 +213,7 @@ GameStates.Game.prototype = {
         this.rails = this.add.sprite(0, 0, 'rails')
         this.hoist = this.add.sprite(0, 100, 'hoist')
         this.hoist.anchor.y = 0.7
-        this.hoist.anchor.x = 0.1
+        this.hoist.anchor.x = 0.295
         this.rails.anchor.y = 0.1
 
         this.ropeGraphics = game.add.graphics(0, 0);
@@ -259,24 +259,24 @@ GameStates.Game.prototype = {
 
         g.clear()
         if (!isComplete) {
-            var rw = 4, leftRopeX = data.hoistX + 25, topRopeY = data.hoistY + 9,
+            var rw = 4, leftRopeX = data.hoistX, topRopeY = data.hoistY + 9,
                 cx = data.containers[data.containers.length - 1].x,
                 cy = data.containers[data.containers.length - 1].y;
 
             g.lineStyle(rw, 0x333333, 1);
 
             // left & right ropes
-            g.moveTo(leftRopeX + rw / 2, topRopeY);
-            g.lineTo(cx + rw / 2, cy);
+            g.moveTo(rw / 2 + leftRopeX, topRopeY);
+            g.lineTo(rw / 2 + cx, cy);
 
-            g.moveTo(leftRopeX + containerWidth - rw / 2, topRopeY);
-            g.lineTo(cx + containerWidth - rw / 2, cy);
+            g.moveTo(containerWidth - rw / 2 + leftRopeX, topRopeY);
+            g.lineTo(containerWidth - rw / 2 + cx, cy);
 
             // circles near to box
             g.lineStyle(0);
             g.beginFill(0xFFFF0B, 0.5);
             g.drawCircle(cx + rw / 2, cy, 6);
-            g.drawCircle(cx + containerWidth - rw / 2, cy, 6);
+            g.drawCircle(containerWidth + cx - rw / 2, cy, 6);
             g.endFill();
         }
     },
