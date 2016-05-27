@@ -109,7 +109,7 @@ var getData = function () {
             oldData.containers.push(new Container(oldData.hoistX, 120))
             TARGET_X = 100 + 125 * ((oldData.containers.length - 1) % 5)
             if (oldData.containers.length > 5) {
-                TARGET_X = oldData.containers[oldData.containers.length - 5].x
+                TARGET_X = oldData.containers[oldData.containers.length - 6].x
             }
         }
     }
@@ -145,8 +145,11 @@ var getData = function () {
             newSpeedY = Math.min(newSpeedY, MAX_CHANGE_SPEED)
         if (newSpeedY < 0)
             newSpeedY = Math.max(newSpeedY, -MAX_CHANGE_SPEED)
+        if (kasd > 0.5)
+            newSpeedY = 0
         oldData.changeContainerSpeedY = newSpeedY
         oldData.changeHoistSpeedX = newSpeedX
+        var kasd = Math.abs(distX) / dist
     }
 
     doMove(oldData)
