@@ -16,7 +16,7 @@ GameStates.Boot.prototype = {
         this.load.image('preloaderBar', 'assets/preloader-bar.png');
     },
     create: function () {
-        this.game.stage.backgroundColor = 0xffffff;
+        // this.game.stage.backgroundColor = 0xffffff;
         this.state.start('Preloader');
     }
 };
