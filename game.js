@@ -82,7 +82,7 @@ var MAX_WIND_CHANGE_SPEED = 0.1
 
 var minimapClick = function (z, x) {
     return function() {
-        if (isComplete && (countContainersOnSlot[z][x] < 7)) {
+        if (isComplete && (countContainersOnSlot[z][x] < 5)) {
             this.targetSlotX = x
             this.targetSlotZ = z
             isComplete = false
@@ -120,7 +120,7 @@ var getData = function (targetSlotX, targetSlotZ) {
     }
 
     if (isRunning == false) {
-        oldData.targetX = 100 + 100 * targetSlotX
+        oldData.targetX = 100 + 80 * targetSlotX
         oldData.containers.push(new Container(oldData.hoistX, 120, targetSlotX, countContainersOnSlot[targetSlotZ][targetSlotX]))
         isRunning = true
         isComplete = false
